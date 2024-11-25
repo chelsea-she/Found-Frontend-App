@@ -9,7 +9,6 @@ struct Post : Codable {
     let id: Int
     let colors: [String]
     let category: String
-    let subcategory: String
     let description: String
     let imageUrl: String
     let locationFound: String

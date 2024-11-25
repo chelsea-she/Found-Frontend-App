@@ -26,6 +26,7 @@ struct FoundView: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    //insert image here, 
                     CategorySection(category: $category)
                         .padding([.leading, .trailing], 20)
                     ColorSection(selectedColors: $selectedColors)
