@@ -14,7 +14,7 @@ import FirebaseAuth
 struct FoundApp: App {
     
     //    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @ObservedObject var appState: AppState = AppState()
+    @StateObject var appState: AppState = AppState()
     @StateObject var profileViewModel = ProfileViewModel()
     
     //    init() {
@@ -40,6 +40,7 @@ struct FoundApp: App {
                             }
                     }
                     .environmentObject(profileViewModel)
+                    .environmentObject(appState)
                 }
             }
             else {
