@@ -6,14 +6,15 @@
 //
 
 struct Post : Codable {
-    let id: Int
-    let colors: [String]
+    let id: String
+    let userId: String
+    let color: [String]
     let category: String
     let description: String
-    let imageUrl: String
-    let locationFound: String
-    let locationAt: String
-    let phoneNumber: String
-    let email: String
-    let dateFound: String
+    let image: String
+    let currentLocation: String
+    let location: String
+    let finderNumber: String
+    let finderEmail: String
+    let timestamp: String
 }
