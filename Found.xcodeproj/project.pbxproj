@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -53,6 +53,12 @@
 		498961422CF3EE7D001F93EE /* ReceivedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		542C49992CF3F9D400469490 /* ViewControllers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ViewControllers; sourceTree = "<group>"; };
+		542C49A92CF3FD0D00469490 /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
+		542C49AA2CF4227300469490 /* Networking */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Networking; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		498960FA2CF2CE95001F93EE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -93,6 +99,9 @@
 		498960FF2CF2CE95001F93EE /* Found */ = {
 			isa = PBXGroup;
 			children = (
+				542C49AA2CF4227300469490 /* Networking */,
+				542C49A92CF3FD0D00469490 /* Models */,
+				542C49992CF3F9D400469490 /* ViewControllers */,
 				498961342CF2D39A001F93EE /* Info.plist */,
 				498961002CF2CE95001F93EE /* FoundApp.swift */,
 				498961022CF2CE95001F93EE /* LostView.swift */,
@@ -151,6 +160,11 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				542C49992CF3F9D400469490 /* ViewControllers */,
+				542C49A92CF3FD0D00469490 /* Models */,
+				542C49AA2CF4227300469490 /* Networking */,
 			);
 			name = Found;
 			packageProductDependencies = (
@@ -364,7 +378,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Found/Preview Content\"";
-				DEVELOPMENT_TEAM = QPS8AP85BK;
+				DEVELOPMENT_TEAM = 24HFUZJ6RB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -404,7 +418,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Found/Preview Content\"";
-				DEVELOPMENT_TEAM = QPS8AP85BK;
+				DEVELOPMENT_TEAM = 24HFUZJ6RB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
