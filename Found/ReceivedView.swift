@@ -32,6 +32,7 @@ struct ReceivedView: View {
         .sheet(isPresented: $viewModel.isShowingProfileView){
             ProfileView(viewModel: ProfileViewModel())
         }
+
     }
 }
 

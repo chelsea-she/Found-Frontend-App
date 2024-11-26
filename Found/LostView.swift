@@ -32,6 +32,7 @@ struct LostView: View {
         .sheet(isPresented: $viewModel.isShowingProfileView){
             ProfileView(viewModel: ProfileViewModel())
         }
+
     }
 }
 

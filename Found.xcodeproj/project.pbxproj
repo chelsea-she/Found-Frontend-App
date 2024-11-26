@@ -31,8 +31,6 @@
 		4989613D2CF2E75A001F93EE /* FoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989613C2CF2E75A001F93EE /* FoundView.swift */; };
 		498961412CF2F598001F93EE /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 498961402CF2F598001F93EE /* Launch Screen.storyboard */; };
 		498961432CF3EE7D001F93EE /* ReceivedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961422CF3EE7D001F93EE /* ReceivedView.swift */; };
-		542C49B02CF4276F00469490 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 542C49AF2CF4276F00469490 /* Alamofire */; };
-		542C49B22CF4276F00469490 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 542C49B12CF4276F00469490 /* AlamofireDynamic */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,12 +65,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				498961152CF2CEF8001F93EE /* FirebaseDatabase in Frameworks */,
-				542C49B22CF4276F00469490 /* AlamofireDynamic in Frameworks */,
 				498961172CF2CEF8001F93EE /* FirebaseFirestore in Frameworks */,
 				4989611D2CF2CEF8001F93EE /* FirebaseMessaging in Frameworks */,
 				498961192CF2CEF8001F93EE /* FirebaseFunctions in Frameworks */,
 				498961132CF2CEF8001F93EE /* FirebaseCore in Frameworks */,
-				542C49B02CF4276F00469490 /* Alamofire in Frameworks */,
 				498961242CF2CF06001F93EE /* GoogleSignInSwift in Frameworks */,
 				4989611F2CF2CEF8001F93EE /* FirebaseStorage in Frameworks */,
 				498961112CF2CEF8001F93EE /* FirebaseAuth in Frameworks */,
@@ -182,8 +178,6 @@
 				4989611E2CF2CEF8001F93EE /* FirebaseStorage */,
 				498961212CF2CF06001F93EE /* GoogleSignIn */,
 				498961232CF2CF06001F93EE /* GoogleSignInSwift */,
-				542C49AF2CF4276F00469490 /* Alamofire */,
-				542C49B12CF4276F00469490 /* AlamofireDynamic */,
 			);
 			productName = Found;
 			productReference = 498960FD2CF2CE95001F93EE /* Found.app */;
@@ -216,7 +210,6 @@
 			packageReferences = (
 				4989610F2CF2CEF8001F93EE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				498961202CF2CF06001F93EE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				542C49AE2CF4276F00469490 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 498960FE2CF2CE95001F93EE /* Products */;
 			projectDirPath = "";
@@ -496,14 +489,6 @@
 				minimumVersion = 8.0.0;
 			};
 		};
-		542C49AE2CF4276F00469490 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.10.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -556,16 +541,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 498961202CF2CF06001F93EE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
-		};
-		542C49AF2CF4276F00469490 /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 542C49AE2CF4276F00469490 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		542C49B12CF4276F00469490 /* AlamofireDynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 542C49AE2CF4276F00469490 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = AlamofireDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
