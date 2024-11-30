@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 import FirebaseCore
 import GoogleSignIn
 import FirebaseAuth
@@ -13,9 +14,11 @@ import FirebaseAuth
 @main
 struct FoundApp: App {
     
-    //    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var appState: AppState = AppState()
     @StateObject var profileViewModel = ProfileViewModel()
+    @StateObject var authViewModel = AuthViewModel(appState: AppState())
+
     
     //    init() {
     //        configureFirebase()
@@ -23,7 +26,11 @@ struct FoundApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if appState.isLoggedIn {
+            if appState.isFirstTimeUser {
+                SignupView(viewModel: authViewModel)
+                    .environmentObject(appState)
+            }
+            else if appState.isLoggedIn {
                 NavigationStack(path: $appState.navigationPath) {
                     TabView {
                         LostView()
@@ -44,7 +51,7 @@ struct FoundApp: App {
                 }
             }
             else {
-                AuthView()
+                AuthView(viewModel: authViewModel)
                     .environmentObject(appState)
             }
             
@@ -58,16 +65,16 @@ struct FoundApp: App {
     }
 }
 
-//class AppDelegate: NSObject, UIApplicationDelegate {
-//    func application(_ application: UIApplication,
-//                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-//        FirebaseApp.configure()
-//        return true
-//    }
-//
-//    func application(_ app: UIApplication,
-//                     open url: URL,
-//                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-//        return GIDSignIn.sharedInstance.handle(url)
-//    }
-//}
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseApp.configure()
+        return true
+    }
+
+    func application(_ app: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        return GIDSignIn.sharedInstance.handle(url)
+    }
+}

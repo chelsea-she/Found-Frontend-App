@@ -6,13 +6,84 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import Firebase
+import PhotosUI
 
 struct SignupView: View {
+    @State private var password = ""
+    @State private var displayName = ""
+    @State private var profileImage: UIImage?
+    @State private var bio = ""
+    @State private var phone = ""
+    @State private var isPickerPresented = false
+    
+    @EnvironmentObject var appState: AppState
+    @ObservedObject var viewModel: AuthViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(spacing: 20) {
+            // Profile Image
+            //                Button(action: {
+            //                    isPickerPresented = true
+            //                }) {
+            //                    if let profileImage = profileImage {
+            //                        Image(uiImage: profileImage)
+            //                            .resizable()
+            //                            .scaledToFill()
+            //                            .frame(width: 100, height: 100)
+            //                            .clipShape(Circle())
+            //                            .overlay(Circle().stroke(Color.gray, lineWidth: 2))
+            //                    } else {
+            //                        Image(systemName: "person.circle")
+            //                            .resizable()
+            //                            .scaledToFit()
+            //                            .frame(width: 100, height: 100)
+            //                            .foregroundColor(.gray)
+            //                    }
+            //                }
+            
+            // Input Fields
+            Text("Hello there!")
+                .font(.largeTitle)
+                .fontWeight(.medium)
+            SecureField("Password",text: $viewModel.passwordText)
+                .padding()
+                .background(Color.gray.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            TextField("Display Name", text: $displayName)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            TextField("Phone #", text: $phone)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            TextField("Bio", text: $bio)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            
+            // Register Button
+            Button(action: completeRegistration) {
+                if viewModel.isLoading {
+                    ProgressView()
+                } else {
+                    Text("Register")
+                        .padding()
+                        .foregroundStyle(.white)
+                        .background(Color.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                }
+            }
+        }
+        .padding()
+        .alert(isPresented: $viewModel.showAlert) {
+            Alert(title: Text("An error occurred, please try again"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
+        }
+        //        .sheet(isPresented: $isPickerPresented) {
+        //            ImagePicker(image: $profileImage)
+        //        }
     }
-}
-
-#Preview {
-    SignupView()
+    
+    private func completeRegistration() {
+        // Simplified action to set `isFirstTimeUser` to false
+        appState.isFirstTimeUser = false
+        appState.loggedIn = true
+        viewModel.authenticate(appState: appState)
+    }
 }

@@ -7,6 +7,8 @@
 
 import Foundation
 import FirebaseAuth
+import GoogleSignIn
+import Firebase
 
 class AuthViewModel: ObservableObject {
     @Published var emailText: String = ""
@@ -17,6 +19,12 @@ class AuthViewModel: ObservableObject {
     @Published var userExists = false
     @Published var showAlert = false
     @Published var alertMessage = ""
+    
+    private let appState: AppState
+    
+    init(appState: AppState) {
+        self.appState = appState
+    }
     
     let authService = AuthService()
     
@@ -40,6 +48,9 @@ class AuthViewModel: ObservableObject {
                         userExists = userExistsResult
                         isPasswordVisible = true
                         isLoading = false // Reset loading state after operation
+                        if !userExists {
+                            appState.isFirstTimeUser = true
+                        }
                     }
                 }
             } catch let authError as NSError {
@@ -64,4 +75,89 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
+
+    func signInWithGoogle(appState: AppState) {
+        guard let clientID = FirebaseApp.app()?.options.clientID else {
+            print("Missing clientID")
+            return
+        }
+
+        let config = GIDConfiguration(clientID: clientID)
+
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootViewController = windowScene.windows.first?.rootViewController else {
+            print("Failed to get rootViewController")
+            return
+        }
+
+        GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { result, error in
+            if let error = error {
+                print("Google Sign-In Error: \(error.localizedDescription)")
+                return
+            }
+
+            guard let user = result?.user, let idToken = user.idToken else {
+                print("Failed to retrieve user or token")
+                return
+            }
+
+            let credential = GoogleAuthProvider.credential(
+                withIDToken: idToken.tokenString,
+                accessToken: user.accessToken.tokenString
+            )
+
+            Auth.auth().signIn(with: credential) { authResult, error in
+                if let error = error {
+                    print("Firebase Sign-In Error: \(error.localizedDescription)")
+                    return
+                }
+
+                guard let user = authResult?.user else { return }
+
+                print("User signed in: \(user.email ?? "No Email")")
+
+                // Check Firestore for user existence
+                let db = Firestore.firestore()
+                let userDoc = db.collection("users").document(user.uid)
+
+                userDoc.getDocument { document, error in
+                    if let error = error {
+                        print("Error checking user existence: \(error.localizedDescription)")
+                        return
+                    }
+
+                    if let document = document, document.exists {
+                        print("User already exists: \(document.data() ?? [:])")
+                        DispatchQueue.main.async {
+                            appState.loggedIn = true
+                        }
+                    } else {
+                        // First-time user
+                        print("First-time user. Creating profile...")
+                        DispatchQueue.main.async {
+                            appState.isFirstTimeUser = true
+                        }
+
+                        userDoc.setData([
+                            "email": user.email ?? "",
+                            "displayName": user.displayName ?? "",
+                            "uid": user.uid,
+                            "createdAt": Timestamp()
+                        ]) { error in
+                            if let error = error {
+                                print("Error creating user: \(error.localizedDescription)")
+                            } else {
+                                print("User profile created successfully.")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
 }

@@ -19,19 +19,20 @@ struct ReceivedView: View {
                     .fontWeight(.bold)
             }
             .navigationTitle("Received")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        viewModel.showProfile()
-                    } label: {
-                        Image(systemName: "person")
-                    }
-                }
-            }
+//            .toolbar {
+//                ToolbarItem(placement: .primaryAction) {
+//                    Button {
+//                        viewModel.showProfile()
+//                    } label: {
+//                        Image(systemName: "person")
+//                    }
+//                }
+//            }
+//            .sheet(isPresented: $viewModel.isShowingProfileView){
+//                ProfileView(viewModel: ProfileViewModel())
+//            }
         }
-        .sheet(isPresented: $viewModel.isShowingProfileView){
-            ProfileView(viewModel: ProfileViewModel())
-        }
+        
     }
 }
 

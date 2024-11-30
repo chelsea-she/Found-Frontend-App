@@ -31,6 +31,12 @@
 		4989613D2CF2E75A001F93EE /* FoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989613C2CF2E75A001F93EE /* FoundView.swift */; };
 		498961412CF2F598001F93EE /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 498961402CF2F598001F93EE /* Launch Screen.storyboard */; };
 		498961432CF3EE7D001F93EE /* ReceivedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961422CF3EE7D001F93EE /* ReceivedView.swift */; };
+		498961452CF4091A001F93EE /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961442CF4091A001F93EE /* SignupView.swift */; };
+		498961472CF423F8001F93EE /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961462CF423F8001F93EE /* Application.swift */; };
+		4989614A2CFB9120001F93EE /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961492CFB9120001F93EE /* Categories.swift */; };
+		4989614E2CFB9150001F93EE /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989614D2CFB9150001F93EE /* Post.swift */; };
+		498961502CFB916A001F93EE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989614F2CFB916A001F93EE /* User.swift */; };
+		498961532CFB9198001F93EE /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961522CFB9198001F93EE /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +57,12 @@
 		4989613C2CF2E75A001F93EE /* FoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundView.swift; sourceTree = "<group>"; };
 		498961402CF2F598001F93EE /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		498961422CF3EE7D001F93EE /* ReceivedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedView.swift; sourceTree = "<group>"; };
+		498961442CF4091A001F93EE /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		498961462CF423F8001F93EE /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
+		498961492CFB9120001F93EE /* Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categories.swift; sourceTree = "<group>"; };
+		4989614D2CFB9150001F93EE /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		4989614F2CFB916A001F93EE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		498961522CFB9198001F93EE /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +113,8 @@
 				4989612C2CF2CF6A001F93EE /* AppState.swift */,
 				498961252CF2CF3D001F93EE /* Authentication */,
 				498961372CF2E15C001F93EE /* Profile */,
+				498961482CFB9102001F93EE /* Models */,
+				498961512CFB917E001F93EE /* Networking */,
 				498961042CF2CE95001F93EE /* Assets.xcassets */,
 				498961402CF2F598001F93EE /* Launch Screen.storyboard */,
 				498961062CF2CE95001F93EE /* Found.entitlements */,
@@ -122,8 +136,10 @@
 			isa = PBXGroup;
 			children = (
 				498961262CF2CF4B001F93EE /* AuthView.swift */,
+				498961442CF4091A001F93EE /* SignupView.swift */,
 				498961282CF2CF5A001F93EE /* AuthViewModel.swift */,
 				4989612A2CF2CF62001F93EE /* AuthService.swift */,
+				498961462CF423F8001F93EE /* Application.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -135,6 +151,24 @@
 				4989613A2CF2E1A0001F93EE /* ProfileViewModel.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		498961482CFB9102001F93EE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				498961492CFB9120001F93EE /* Categories.swift */,
+				4989614D2CFB9150001F93EE /* Post.swift */,
+				4989614F2CFB916A001F93EE /* User.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		498961512CFB917E001F93EE /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				498961522CFB9198001F93EE /* NetworkManager.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -225,16 +259,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				498961472CF423F8001F93EE /* Application.swift in Sources */,
 				4989613D2CF2E75A001F93EE /* FoundView.swift in Sources */,
 				498961292CF2CF5A001F93EE /* AuthViewModel.swift in Sources */,
 				498961032CF2CE95001F93EE /* LostView.swift in Sources */,
+				498961532CFB9198001F93EE /* NetworkManager.swift in Sources */,
 				4989612B2CF2CF62001F93EE /* AuthService.swift in Sources */,
+				4989614E2CFB9150001F93EE /* Post.swift in Sources */,
 				4989612D2CF2CF6A001F93EE /* AppState.swift in Sources */,
 				498961432CF3EE7D001F93EE /* ReceivedView.swift in Sources */,
+				498961502CFB916A001F93EE /* User.swift in Sources */,
 				498961012CF2CE95001F93EE /* FoundApp.swift in Sources */,
 				498961392CF2E170001F93EE /* ProfileView.swift in Sources */,
 				4989613B2CF2E1A0001F93EE /* ProfileViewModel.swift in Sources */,
+				498961452CF4091A001F93EE /* SignupView.swift in Sources */,
 				498961272CF2CF4B001F93EE /* AuthView.swift in Sources */,
+				4989614A2CFB9120001F93EE /* Categories.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,13 +8,14 @@
 import Foundation
 import SwiftUI
 import FirebaseAuth
+import GoogleSignIn
 
 class ProfileViewModel: ObservableObject {
-    @Published var isShowingProfileView = false
     @Published var userName: String?
     @Published var isLoggedIn: Bool = false
     @Published var isLoading = false
     @Published var email: String?
+    @Published var isShowingProfileView = false
     
     init() {
         fetchUserName()
@@ -44,6 +45,7 @@ class ProfileViewModel: ObservableObject {
         isLoading = true
         Task {
             do {
+                GIDSignIn.sharedInstance.signOut()
                 try Auth.auth().signOut()
                 await MainActor.run {
                     appState.currentUser = nil
@@ -58,5 +60,6 @@ class ProfileViewModel: ObservableObject {
     func showProfile() {
         isShowingProfileView = true
     }
+    
 }
 

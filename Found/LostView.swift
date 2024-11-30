@@ -19,18 +19,18 @@ struct LostView: View {
                     .fontWeight(.bold)
             }
             .navigationTitle("Lost")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        viewModel.showProfile()
-                    } label: {
-                        Image(systemName: "person")
-                    }
-                }
-            }
-        }
-        .sheet(isPresented: $viewModel.isShowingProfileView){
-            ProfileView(viewModel: ProfileViewModel())
+//            .toolbar {
+//                ToolbarItem(placement: .primaryAction) {
+//                    Button {
+//                        viewModel.showProfile()
+//                    } label: {
+//                        Image(systemName: "person")
+//                    }
+//                }
+//            }
+//            .sheet(isPresented: $viewModel.isShowingProfileView){
+//                ProfileView(viewModel: ProfileViewModel())
+//            }
         }
     }
 }

@@ -1,8 +1,16 @@
 //
 //  User.swift
-//  Found
+//  Lost
 //
-//  Created by Chelsea She on 11/30/24.
+//  Created by Ryan Ye on 11/24/24.
 //
 
-import Foundation
+struct User1{
+    let id: String
+    var displayName: String
+    var bio: String
+    var profileImage: String
+    var email: String
+    var phone: String
+    var isVerified: Bool
+}
