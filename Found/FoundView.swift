@@ -23,134 +23,152 @@ struct FoundView: View {
     @State private var showDatePicker: Bool = false
     @State private var selectedTab = 0
     
+    //MARK: layout helper
+    struct TabItemView<Content: View>: View {
+        let title: String
+        let content: Content
+        
+        init(title: String, @ViewBuilder content: () -> Content) {
+            self.title = title
+            self.content = content()
+        }
+        
+        var body: some View {
+            NavigationView {
+                ZStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Spacer().frame(height: UIScreen.main.bounds.height/2-210) // Create space for the title
+                        content
+                    }
+                    
+                    Text(title)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .offset(x:0, y:-135)
+                }
+                .padding([.leading, .trailing], 20)
+            }
+        }
+    }
+    
     //MARK: main body
     var body: some View {
         TabView(selection: $selectedTab) {
-            NavigationView {
-                VStack(alignment: .leading, spacing: 16) {
-                    CategorySection(category: $category)
-                    ColorSection(selectedColors: $selectedColors)
-                    DescriptionSection(description: $description)
+            TabItemView(title: "Found something?", content: {
+                CategorySection(category: $category)
+                ColorSection(selectedColors: $selectedColors)
+                DescriptionSection(description: $description)
+                Spacer()
+                    .frame(minWidth:0, minHeight:-50)
+                HStack {
                     Spacer()
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            selectedTab += 1
-                        }) {
-                            Image(systemName: "arrow.right")
-                                .foregroundColor(.black)
-                                .padding()
-                                .clipShape(Circle())
-                        }
+                    Button(action: {
+                        selectedTab += 1
+                    }) {
+                        Image(systemName: "arrow.right")
+                            .foregroundColor(.black)
+                            .clipShape(Circle())
                     }
+                    .contentShape(Rectangle())
+                    .frame(width: 15, height: 15)
                 }
-                .padding([.leading, .trailing], 20)
-                .navigationTitle("Found something?")
-                .navigationBarTitleDisplayMode(.large)
-            }
+            })
             .tag(0)
             .tabItem {
                 Label("Description", systemImage: "1.circle")
             }
 
-            NavigationView {
-                VStack(alignment: .leading, spacing: 16) {
-                    // Insert image here
-                    Text("Image stuff will go here")
-                    Spacer()
-                    HStack {
-                        Button(action: {
-                            selectedTab -= 1
-                        }) {
-                            Image(systemName: "arrow.left")
-                                .foregroundColor(.black)
-                                .padding()
-                                .clipShape(Circle())
-                        }
-                        Spacer()
-                        Button(action: {
-                            selectedTab += 1
-                        }) {
-                            Image(systemName: "arrow.right")
-                                .foregroundColor(.black)
-                                .padding()
-                                .clipShape(Circle())
-                        }
+            TabItemView(title: "Insert an Image", content: {
+                // Insert image here
+                Text("Image stuff will go here")
+                Spacer()
+
+                HStack {
+                    Button(action: {
+                        selectedTab -= 1
+                    }) {
+                        Image(systemName: "arrow.left")
+                            .foregroundColor(.black)
+                            .clipShape(Circle())
                     }
+                    .contentShape(Rectangle())
+                    .frame(width: 15, height: 15)
+                    Spacer()
+                    Button(action: {
+                        selectedTab += 1
+                    }) {
+                        Image(systemName: "arrow.right")
+                            .foregroundColor(.black)
+                            .clipShape(Circle())
+                    }
+                    .contentShape(Rectangle())
+                    .frame(width: 15, height: 15)
                 }
-                .padding([.leading, .trailing], 20)
-                .navigationTitle("Insert an Image")
-                .navigationBarTitleDisplayMode(.large)
-            }
+            })
             .tag(1)
             .tabItem {
                 Label("Image", systemImage: "2.circle")
             }
 
-            NavigationView {
-                VStack(alignment: .leading, spacing: 16) {
-                    DatePickerSection(showDatePicker: $showDatePicker, date: $date)
-                    LocationSection(location: $location)
-                    Spacer()
-                    HStack {
-                        Button(action: {
-                            selectedTab -= 1
-                        }) {
-                            Image(systemName: "arrow.left")
-                                .foregroundColor(.black)
-                                .padding()
-                                .clipShape(Circle())
-                        }
-                        Spacer()
-                        Button(action: {
-                            selectedTab += 1
-                        }) {
-                            Image(systemName: "arrow.right")
-                                .foregroundColor(.black)
-                                .padding()
-                                .clipShape(Circle())
-                        }
+            TabItemView(title: "Omg where'd you find it?", content: {
+                DatePickerSection(showDatePicker: $showDatePicker, date: $date)
+                LocationSection(location: $location)
+
+                Spacer()
+                HStack {
+                    Button(action: {
+                        selectedTab -= 1
+                    }) {
+                        Image(systemName: "arrow.left")
+                            .foregroundColor(.black)
+                            .clipShape(Circle())
                     }
+                    .contentShape(Rectangle())
+                    .frame(width: 15, height: 15)
+                    Spacer()
+                    Button(action: {
+                        selectedTab += 1
+                    }) {
+                        Image(systemName: "arrow.right")
+                            .foregroundColor(.black)
+                            .clipShape(Circle())
+                    }
+                    .contentShape(Rectangle())
+                    .frame(width: 15, height: 15)
                 }
-                .padding([.leading, .trailing], 20)
-                .navigationTitle("Omg where'd you find it?")
-                .navigationBarTitleDisplayMode(.large)
-            }
+            })
             .tag(2)
             .tabItem {
                 Label("Location", systemImage: "3.circle")
             }
 
-            NavigationView {
-                VStack(alignment: .leading, spacing: 16) {
-                    EmailSection(email: $email)
-                    PhoneNumberSection(phoneNumber: $phoneNumber)
-                    NavigationLink(destination: UIKitViewControllerWrapper()) {//TODO: push do networking here and push to a confirmation page
-                        Text("Submit!")
-                            .font(.title)
-                            .padding()
-                            .frame(width: 400, height: 50)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    Spacer()
-                    HStack {
-                        Button(action: {
-                            selectedTab -= 1
-                        }) {
-                            Image(systemName: "arrow.left")
-                                .foregroundColor(.black)
-                                .padding()
-                                .clipShape(Circle())
-                        }
-                        Spacer()
-                    }
+            TabItemView(title: "Final step", content: {
+                EmailSection(email: $email)
+                PhoneNumberSection(phoneNumber: $phoneNumber)
+                Spacer()
+
+                NavigationLink(destination: UIKitViewControllerWrapper()) {//TODO: push do networking here and push to a confirmation page
+                    Text("Submit!")
+                        .font(.title)
+                        .frame(width: UIScreen.main.bounds.width-40, height: 50)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                 }
-                .padding([.leading, .trailing], 20)
-                .navigationTitle("Final step")
-                .navigationBarTitleDisplayMode(.large)
-            }
+
+                HStack {
+                    Button(action: {
+                        selectedTab -= 1
+                    }) {
+                        Image(systemName: "arrow.left")
+                            .foregroundColor(.black)
+                            .clipShape(Circle())
+                    }
+                    .contentShape(Rectangle())
+                    .frame(width: 15, height: 15)
+                    Spacer()
+                }
+            })
             .tag(3)
             .tabItem {
                 Label("Contact", systemImage: "4.circle")
@@ -223,6 +241,7 @@ struct ColorSection: View {
             }
             HStack{
                 Text("Selected Colors: ")
+                    .padding(3)
                 if(selectedColors.count <= 0){
                     Text("You must select at least one color")
                         .font(.caption)
@@ -233,6 +252,7 @@ struct ColorSection: View {
                         .padding(3)
                         .background(colorOptions[colorOptions.firstIndex(where: { $0.name == selectedColor })!].color.opacity(0.7))
                         .cornerRadius(8)
+                        
                 }
             }
         }

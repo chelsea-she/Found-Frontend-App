@@ -45,6 +45,11 @@ struct FoundApp: App {
                             .tabItem {
                                 Label("Received", systemImage: "checkmark.seal")
                             }
+                        ProfileView(viewModel: ProfileViewModel())
+                            .tabItem {
+                                Label("Profile", systemImage: "person")
+                            }
+
                     }
                     .environmentObject(profileViewModel)
                     .environmentObject(appState)
