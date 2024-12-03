@@ -22,7 +22,7 @@ struct FoundView: View {
     
     @State private var selectedImages: [UIImage] = []
     
-    @State private var showImagePicker = false
+    @State private var showImagePickerFound = false
     @State private var showDatePicker: Bool = false
     @State private var selectedTab = 0
     
@@ -58,9 +58,9 @@ struct FoundView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             TabItemView(title: "Found something?", content: {
-                CategorySection(category: $category)
-                ColorSection(selectedColors: $selectedColors)
-                DescriptionSection(description: $description)
+                CategorySectionFound(category: $category)
+                ColorSectionFound(selectedColors: $selectedColors)
+                DescriptionSectionFound(description: $description)
                 Spacer()
                     .frame(minWidth:0, minHeight:-50)
                 HStack {
@@ -83,7 +83,7 @@ struct FoundView: View {
 
             TabItemView(title: "Insert an Image", content: {
                 // Insert image here
-                ImagePicker(selectedImages: $selectedImages, showImagePicker: $showImagePicker)
+                ImagePickerFound(selectedImages: $selectedImages, showImagePickerFound: $showImagePickerFound)
                 Spacer()
 
                 HStack {
@@ -114,8 +114,8 @@ struct FoundView: View {
             }
 
             TabItemView(title: "Omg where'd you find it?", content: {
-                DatePickerSection(showDatePicker: $showDatePicker, date: $date)
-                LocationSection(location: $location)
+                DatePickerSectionFound(showDatePicker: $showDatePicker, date: $date)
+                LocationSectionFound(location: $location)
 
                 Spacer()
                 HStack {
@@ -146,11 +146,11 @@ struct FoundView: View {
             }
 
             TabItemView(title: "Final step", content: {
-                EmailSection(email: $email)
-                PhoneNumberSection(phoneNumber: $phoneNumber)
+                EmailSectionFound(email: $email)
+                PhoneNumberSectionFound(phoneNumber: $phoneNumber)
                 Spacer()
 
-                NavigationLink(destination: UIKitViewControllerWrapper()) {//TODO: push do networking here and push to a confirmation page
+                NavigationLink(destination: UIKitViewControllerWrapperFound()) {//TODO: push do networking here and push to a confirmation page
                     Text("Submit!")
                         .font(.title2)
                         .frame(width: UIScreen.main.bounds.width-40, height: 50)
@@ -182,7 +182,7 @@ struct FoundView: View {
 
 }
 //MARK: categories
-struct CategorySection: View {
+struct CategorySectionFound: View {
     @Binding var category: String
     
     var body: some View {
@@ -215,7 +215,7 @@ struct CategorySection: View {
     }
 }
 //MARK: colors
-struct ColorSection: View {
+struct ColorSectionFound: View {
     @Binding var selectedColors: [String]
     @State private var colorOptions: [ColorOption] = Categories.init().colorOptions
 
@@ -262,7 +262,7 @@ struct ColorSection: View {
     }
 }
 //MARK: description
-struct DescriptionSection: View {
+struct DescriptionSectionFound: View {
     @Binding var description: String
     
     var body: some View {
@@ -277,7 +277,7 @@ struct DescriptionSection: View {
     }
 }
 //MARK: date picker
-struct DatePickerSection: View {
+struct DatePickerSectionFound: View {
     @Binding var showDatePicker: Bool
     @Binding var date: Date
     
@@ -301,12 +301,12 @@ struct DatePickerSection: View {
             }
         }
         .sheet(isPresented: $showDatePicker) {
-            DatePickerPopup(selectedDate: $date)
+            DatePickerPopupFound(selectedDate: $date)
         }
     }
 }
 //MARK: location
-struct LocationSection: View {
+struct LocationSectionFound: View {
     @Binding var location: String
     
     var body: some View {
@@ -322,7 +322,7 @@ struct LocationSection: View {
 }
 
 //MARK: email
-struct EmailSection: View {
+struct EmailSectionFound: View {
     @Binding var email: String
     
     var body: some View {
@@ -340,7 +340,7 @@ struct EmailSection: View {
 
 //MARK: phone number
 
-struct PhoneNumberSection: View {
+struct PhoneNumberSectionFound: View {
     @Binding var phoneNumber: String
     
     var body: some View {
@@ -358,7 +358,7 @@ struct PhoneNumberSection: View {
 
 //MARK: date picker
 
-struct DatePickerPopup: View {
+struct DatePickerPopupFound: View {
     @Binding var selectedDate: Date
     @Environment(\.dismiss) private var dismiss
     
@@ -398,7 +398,7 @@ struct DatePickerPopup: View {
 
 
 //MARK: wrapper
-struct UIKitViewControllerWrapper: UIViewControllerRepresentable {
+struct UIKitViewControllerWrapperFound: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> MyUIKitViewController {
         //TODO: do networking here, if successful, return, else return a failed page or just don't return a page?
         //TODO: should we have a review and submit page?
@@ -411,9 +411,9 @@ struct UIKitViewControllerWrapper: UIViewControllerRepresentable {
 }
 
 //MARK: image picker
-struct ImagePicker: View {
+struct ImagePickerFound: View {
     @Binding var selectedImages: [UIImage]
-    @Binding var showImagePicker: Bool
+    @Binding var showImagePickerFound: Bool
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -444,16 +444,16 @@ struct ImagePicker: View {
             }
             Spacer()
             Button("Select Photos") {
-                showImagePicker = true
+                showImagePickerFound = true
             }
-            .sheet(isPresented: $showImagePicker) {
-                PhotoPicker(selectedImages: $selectedImages)
+            .sheet(isPresented: $showImagePickerFound) {
+                PhotoPickerFound(selectedImages: $selectedImages)
             }
         }
     }
 }
 
-struct PhotoPicker: UIViewControllerRepresentable {
+struct PhotoPickerFound: UIViewControllerRepresentable {
     @Binding var selectedImages: [UIImage]
 
     func makeUIViewController(context: Context) -> PHPickerViewController {
@@ -473,9 +473,9 @@ struct PhotoPicker: UIViewControllerRepresentable {
     }
 
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
-        let parent: PhotoPicker
+        let parent: PhotoPickerFound
 
-        init(_ parent: PhotoPicker) {
+        init(_ parent: PhotoPickerFound) {
             self.parent = parent
         }
 
