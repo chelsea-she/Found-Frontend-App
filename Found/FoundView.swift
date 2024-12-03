@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct FoundView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
@@ -19,7 +20,9 @@ struct FoundView: View {
     @State private var email: String = "" //pre-fill with user's email
     @State private var phoneNumber: String = "" //pre-fill with user's phone number
     
+    @State private var selectedImages: [UIImage] = []
     
+    @State private var showImagePicker = false
     @State private var showDatePicker: Bool = false
     @State private var selectedTab = 0
     
@@ -80,7 +83,7 @@ struct FoundView: View {
 
             TabItemView(title: "Insert an Image", content: {
                 // Insert image here
-                Text("Image stuff will go here")
+                ImagePicker(selectedImages: $selectedImages, showImagePicker: $showImagePicker)
                 Spacer()
 
                 HStack {
@@ -149,7 +152,7 @@ struct FoundView: View {
 
                 NavigationLink(destination: UIKitViewControllerWrapper()) {//TODO: push do networking here and push to a confirmation page
                     Text("Submit!")
-                        .font(.title)
+                        .font(.title2)
                         .frame(width: UIScreen.main.bounds.width-40, height: 50)
                         .background(Color.blue)
                         .foregroundColor(.white)
@@ -394,7 +397,7 @@ struct DatePickerPopup: View {
 }
 
 
-
+//MARK: wrapper
 struct UIKitViewControllerWrapper: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> MyUIKitViewController {
         //TODO: do networking here, if successful, return, else return a failed page or just don't return a page?
@@ -404,5 +407,100 @@ struct UIKitViewControllerWrapper: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: MyUIKitViewController, context: Context) {
         // No updates needed for this example
+    }
+}
+
+//MARK: image picker
+struct ImagePicker: View {
+    @Binding var selectedImages: [UIImage]
+    @Binding var showImagePicker: Bool
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            HStack{
+                Text("Insert up to 3 images:")
+                Text("\(selectedImages.count)/3")
+                    .padding()
+                    .foregroundColor(.gray)
+            }
+            if selectedImages.isEmpty {
+                Spacer()
+                Text("*No Images Selected!")
+                    .foregroundColor(.red)
+                Spacer()
+            } else {
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(selectedImages, id: \.self) { image in
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(minWidth:0, maxWidth: 500)
+                                .frame(height: UIScreen.main.bounds.height / 2.75)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                    }
+                }
+            }
+            Spacer()
+            Button("Select Photos") {
+                showImagePicker = true
+            }
+            .sheet(isPresented: $showImagePicker) {
+                PhotoPicker(selectedImages: $selectedImages)
+            }
+        }
+    }
+}
+
+struct PhotoPicker: UIViewControllerRepresentable {
+    @Binding var selectedImages: [UIImage]
+
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        config.selectionLimit = 3
+
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, PHPickerViewControllerDelegate {
+        let parent: PhotoPicker
+
+        init(_ parent: PhotoPicker) {
+            self.parent = parent
+        }
+
+        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            picker.dismiss(animated: true)
+
+            let group = DispatchGroup()
+            var images: [UIImage] = []
+
+            for result in results {
+                let provider = result.itemProvider
+                if provider.canLoadObject(ofClass: UIImage.self) {
+                    group.enter()
+                    provider.loadObject(ofClass: UIImage.self) { image, error in
+                        if let uiImage = image as? UIImage {
+                            images.append(uiImage)
+                        }
+                        group.leave()
+                    }
+                }
+            }
+
+            group.notify(queue: .main) {
+                self.parent.selectedImages = images
+            }
+        }
     }
 }
