@@ -125,7 +125,7 @@ struct FoundView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     EmailSection(email: $email)
                     PhoneNumberSection(phoneNumber: $phoneNumber)
-                    NavigationLink(destination: ReceivedView()) {
+                    NavigationLink(destination: UIKitViewControllerWrapper()) {//TODO: push do networking here and push to a confirmation page
                         Text("Submit!")
                             .font(.title)
                             .padding()
@@ -173,6 +173,9 @@ struct CategorySection: View {
                     Button(option) {
                         category = option
                     }
+                }
+                Button("Other") {
+                    category = ""
                 }
             } label: {
                 Label(category.isEmpty ? "Select a category" : category, systemImage: "arrow.down.circle")
@@ -335,6 +338,9 @@ struct PhoneNumberSection: View {
 struct DatePickerPopup: View {
     @Binding var selectedDate: Date
     @Environment(\.dismiss) private var dismiss
+    
+    let startDate = Calendar.current.date(byAdding: .day, value: -10, to: Date())! // 5 days ago
+    let endDate = Calendar.current.date(byAdding: .day, value: 0, to: Date())! // 5 days in the future
 
     var body: some View {
         VStack {
@@ -345,6 +351,7 @@ struct DatePickerPopup: View {
             DatePicker(
                 "Select Date and Time",
                 selection: $selectedDate,
+                in: startDate...endDate,
                 displayedComponents: [.date, .hourAndMinute]
             )
             .datePickerStyle(WheelDatePickerStyle())
@@ -363,5 +370,19 @@ struct DatePickerPopup: View {
             }
         }
         .padding()
+    }
+}
+
+
+
+struct UIKitViewControllerWrapper: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> MyUIKitViewController {
+        //TODO: do networking here, if successful, return, else return a failed page or just don't return a page?
+        //TODO: should we have a review and submit page?
+        return MyUIKitViewController()
+    }
+    
+    func updateUIViewController(_ uiViewController: MyUIKitViewController, context: Context) {
+        // No updates needed for this example
     }
 }

@@ -37,6 +37,7 @@
 		4989614E2CFB9150001F93EE /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989614D2CFB9150001F93EE /* Post.swift */; };
 		498961502CFB916A001F93EE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989614F2CFB916A001F93EE /* User.swift */; };
 		498961532CFB9198001F93EE /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961522CFB9198001F93EE /* NetworkManager.swift */; };
+		54B9DEF22CFEB328007E0780 /* UIkit test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B9DEF12CFEB324007E0780 /* UIkit test.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		4989614D2CFB9150001F93EE /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		4989614F2CFB916A001F93EE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		498961522CFB9198001F93EE /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		54B9DEF12CFEB324007E0780 /* UIkit test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIkit test.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 		498960FF2CF2CE95001F93EE /* Found */ = {
 			isa = PBXGroup;
 			children = (
+				54B9DEF12CFEB324007E0780 /* UIkit test.swift */,
 				498961342CF2D39A001F93EE /* Info.plist */,
 				498961002CF2CE95001F93EE /* FoundApp.swift */,
 				498961022CF2CE95001F93EE /* LostView.swift */,
@@ -260,6 +263,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				498961472CF423F8001F93EE /* Application.swift in Sources */,
+				54B9DEF22CFEB328007E0780 /* UIkit test.swift in Sources */,
 				4989613D2CF2E75A001F93EE /* FoundView.swift in Sources */,
 				498961292CF2CF5A001F93EE /* AuthViewModel.swift in Sources */,
 				498961032CF2CE95001F93EE /* LostView.swift in Sources */,
