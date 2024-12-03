@@ -36,6 +36,3 @@ struct ReceivedView: View {
     }
 }
 
-#Preview {
-    ReceivedView()
-}
