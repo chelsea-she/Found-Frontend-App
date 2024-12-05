@@ -7,14 +7,13 @@
 
 struct Post : Codable {
     let id: String
-    let userId: String
-    let color: [String]
-    let category: String
-    let description: String
-    let image: String
-    let currentLocation: String
-    let location: String
-    let finderNumber: String
-    let finderEmail: String
-    let timestamp: String
+    var itemName: String
+    var timestamp: String
+    var locationFound: String
+    var dropLocation: String
+    var color: [String]
+    var category: String
+    var image: String
+    var fulfilled: Bool
+    let userID: Int
 }

@@ -24,9 +24,10 @@ class NetworkManager {
             "itemName":name,
             "category":category,
             "color":colors,
-            
+            "description": description,
+            "locationLost":location,
         ]
-        AF.request(endpoint, method: .get, parameters: parameters, encoding: JSONEncoding.default) //change these
+        AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
             .validate()
             .responseDecodable(of: [Post].self, decoder: jsonDecoder) {
                 posts in switch posts.result {
