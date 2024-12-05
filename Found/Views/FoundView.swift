@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import PhoneNumberKit
 
 struct FoundView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
@@ -18,6 +19,7 @@ struct FoundView: View {
     @State private var description: String = ""
     @State private var date: Date = Date()
     @State private var location: String = ""
+    @State private var drop: String = ""
     @State private var email: String = "" //pre-fill with user's email
     @State private var phoneNumber: String = "" //pre-fill with user's phone number
     
@@ -26,6 +28,10 @@ struct FoundView: View {
     @State private var showImagePickerFound = false
     @State private var showDatePicker: Bool = false
     @State private var selectedTab = 0
+    @State private var shouldNavigate = false
+    @State private var phoneNumberValid = false
+
+    @State private var formPost: Post = Post.dummyData //MARK: change this later
     
     //MARK: layout helper
     struct TabItemView<Content: View>: View {
@@ -118,6 +124,7 @@ struct FoundView: View {
                     TabItemView(title: "Omg where'd you find it?", content: {
                         //DatePickerSectionFound(showDatePicker: $showDatePicker, date: $date)
                         LocationSectionFound(location: $location)//MARK: make a location selcetor in the future
+                        DropSectionFound(drop: $drop)//MARK: make a location selcetor in the future
                         //MARK: future make a more detailed location descirption
                         DescriptionSectionFound(description: $description)
 
@@ -149,10 +156,15 @@ struct FoundView: View {
                 else{
                     TabItemView(title: "Final step", content: {
                         EmailSectionFound(email: $email)
-                        PhoneNumberSectionFound(phoneNumber: $phoneNumber)
+                        PhoneNumberSectionFound(phoneNumber: $phoneNumber, phoneNumberValid: $phoneNumberValid)
                         Spacer()
                         
-                        NavigationLink(destination: UIKitViewControllerWrapperFound()) {//TODO: push do networking here and push to a confirmation page
+                        Button(action:{//TODO: push do networking here and push to a confirmation page
+                            if(checkFormFinished()){
+                                updatePost()
+                                shouldNavigate = true
+                            }
+                        }) {
                             Text("Submit!")
                                 .font(.title2)
                                 .frame(width: UIScreen.main.bounds.width-40, height: 50)
@@ -160,6 +172,11 @@ struct FoundView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
+                        NavigationLink(
+                            destination: UIKitViewControllerWrapperFound(post: $formPost),
+                            isActive: $shouldNavigate,
+                            label: { EmptyView() }
+                        )
                         
                         HStack {
                             Button(action: {
@@ -179,6 +196,25 @@ struct FoundView: View {
             .padding(.bottom, 10)
             
         }
+    }
+    
+    func checkFormFinished() -> Bool {
+        if(itemName.isEmpty ||
+           category.isEmpty || category == "Other" ||
+           selectedColors.isEmpty ||
+           selectedImages.isEmpty ||
+           location.isEmpty || drop.isEmpty ||
+           description.isEmpty ||
+           email.isEmpty ||
+           phoneNumber.isEmpty || !phoneNumberValid){
+            return false
+        }
+        
+        return true
+    }
+    
+    func updatePost() {
+        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Post.dummyString, locationFound: location, dropLocation: drop, color: selectedColors, category: category, image:"url", fulfilled: false, userID: 1)//MARK: change this
     }
 
 }
@@ -386,6 +422,22 @@ struct LocationSectionFound: View {
     }
 }
 
+//MARK: drop
+struct DropSectionFound: View {
+    @Binding var drop: String
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("If you dropped this somewhere, where is it?")
+                .font(.headline)
+            TextField("Enter location", text: $drop)
+                .padding()
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(8)
+        }
+    }
+}
+
 //MARK: email
 struct EmailSectionFound: View {
     @Binding var email: String
@@ -407,16 +459,36 @@ struct EmailSectionFound: View {
 
 struct PhoneNumberSectionFound: View {
     @Binding var phoneNumber: String
+    @Binding var phoneNumberValid: Bool
     
+    let phoneNumberUtility = PhoneNumberUtility()
     var body: some View {
         VStack(alignment: .leading) {
             Text("Phone Number")
                 .font(.headline)
+            if(!phoneNumberValid){
+                Text("You must input a valid US phone number")
+                    .font(.caption)
+                    .foregroundColor(.red)
+            }
             TextField("Enter phone number", text: $phoneNumber)
                 .keyboardType(.phonePad)
                 .padding()
                 .background(Color.gray.opacity(0.2))
                 .cornerRadius(8)
+                .onChange(of: phoneNumber){
+                    newValue in phoneNumberValid = validatePhoneNumber(newValue)
+                }
+                
+        }
+    }
+    
+    func validatePhoneNumber(_ number: String) -> Bool {
+        do {
+            _ = try phoneNumberUtility.parse(number, withRegion:"US", ignoreType: true)
+            return true
+        } catch {
+            return false
         }
     }
 }
@@ -464,11 +536,12 @@ struct DatePickerPopupFound: View {
 
 //MARK: wrapper
 struct UIKitViewControllerWrapperFound: UIViewControllerRepresentable {
+    @Binding var post: Post
     func makeUIViewController(context: Context) -> MyUIKitViewController {
         //TODO: do networking here, if successful, return, else return a failed page or just don't return a page?
         //TODO: should we have a review and submit page?
         //TODO: this is currently set to push to a test page
-        return MyUIKitViewController()
+        return MyUIKitViewController(post: post)
     }
     
     func updateUIViewController(_ uiViewController: MyUIKitViewController, context: Context) {

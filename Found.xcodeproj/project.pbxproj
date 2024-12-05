@@ -35,6 +35,7 @@
 		498961502CFB916A001F93EE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989614F2CFB916A001F93EE /* User.swift */; };
 		498961532CFB9198001F93EE /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961522CFB9198001F93EE /* NetworkManager.swift */; };
 		542946762CFEE5DB00E71477 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 542946752CFEE5DB00E71477 /* Alamofire */; };
+		54B734D62D0256EF00B13C9C /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 54B734D52D0256EF00B13C9C /* PhoneNumberKit */; };
 		54B9DEF22CFEB328007E0780 /* UIkit test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B9DEF12CFEB324007E0780 /* UIkit test.swift */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +81,7 @@
 				498961242CF2CF06001F93EE /* GoogleSignInSwift in Frameworks */,
 				4989611F2CF2CEF8001F93EE /* FirebaseStorage in Frameworks */,
 				498961112CF2CEF8001F93EE /* FirebaseAuth in Frameworks */,
+				54B734D62D0256EF00B13C9C /* PhoneNumberKit in Frameworks */,
 				4989611B2CF2CEF8001F93EE /* FirebaseInAppMessaging-Beta in Frameworks */,
 				498961222CF2CF06001F93EE /* GoogleSignIn in Frameworks */,
 			);
@@ -203,6 +205,7 @@
 				498961212CF2CF06001F93EE /* GoogleSignIn */,
 				498961232CF2CF06001F93EE /* GoogleSignInSwift */,
 				542946752CFEE5DB00E71477 /* Alamofire */,
+				54B734D52D0256EF00B13C9C /* PhoneNumberKit */,
 			);
 			productName = Found;
 			productReference = 498960FD2CF2CE95001F93EE /* Found.app */;
@@ -236,6 +239,7 @@
 				4989610F2CF2CEF8001F93EE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				498961202CF2CF06001F93EE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				542946742CFEE5DB00E71477 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				54B734D42D0256EF00B13C9C /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 			);
 			productRefGroup = 498960FE2CF2CE95001F93EE /* Products */;
 			projectDirPath = "";
@@ -527,6 +531,14 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		54B734D42D0256EF00B13C9C /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -584,6 +596,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 542946742CFEE5DB00E71477 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		54B734D52D0256EF00B13C9C /* PhoneNumberKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 54B734D42D0256EF00B13C9C /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
+			productName = PhoneNumberKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

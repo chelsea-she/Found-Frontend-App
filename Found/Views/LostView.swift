@@ -246,7 +246,7 @@ struct DatePickerPopupLost: View {
 struct UIKitViewControllerWrapperLost: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> MyUIKitViewController {
         //TODO: do networking here, if successful, return, push a collectionview page. this is currently set to push to a test page
-        return MyUIKitViewController()
+        return MyUIKitViewController(post:Post.dummyData)
     }
     
     func updateUIViewController(_ uiViewController: MyUIKitViewController, context: Context) {
