@@ -3,12 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		498961012CF2CE95001F93EE /* FoundApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961002CF2CE95001F93EE /* FoundApp.swift */; };
-		498961032CF2CE95001F93EE /* LostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961022CF2CE95001F93EE /* LostView.swift */; };
 		498961052CF2CE95001F93EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 498961042CF2CE95001F93EE /* Assets.xcassets */; };
 		498961092CF2CE95001F93EE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 498961082CF2CE95001F93EE /* Preview Assets.xcassets */; };
 		498961112CF2CEF8001F93EE /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 498961102CF2CEF8001F93EE /* FirebaseAuth */; };
@@ -28,9 +27,7 @@
 		498961332CF2D07D001F93EE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 498961322CF2D07D001F93EE /* GoogleService-Info.plist */; };
 		498961392CF2E170001F93EE /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961382CF2E170001F93EE /* ProfileView.swift */; };
 		4989613B2CF2E1A0001F93EE /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989613A2CF2E1A0001F93EE /* ProfileViewModel.swift */; };
-		4989613D2CF2E75A001F93EE /* FoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989613C2CF2E75A001F93EE /* FoundView.swift */; };
 		498961412CF2F598001F93EE /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 498961402CF2F598001F93EE /* Launch Screen.storyboard */; };
-		498961432CF3EE7D001F93EE /* ReceivedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961422CF3EE7D001F93EE /* ReceivedView.swift */; };
 		498961452CF4091A001F93EE /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961442CF4091A001F93EE /* SignupView.swift */; };
 		498961472CF423F8001F93EE /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961462CF423F8001F93EE /* Application.swift */; };
 		4989614A2CFB9120001F93EE /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961492CFB9120001F93EE /* Categories.swift */; };
@@ -44,7 +41,6 @@
 /* Begin PBXFileReference section */
 		498960FD2CF2CE95001F93EE /* Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Found.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		498961002CF2CE95001F93EE /* FoundApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundApp.swift; sourceTree = "<group>"; };
-		498961022CF2CE95001F93EE /* LostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LostView.swift; sourceTree = "<group>"; };
 		498961042CF2CE95001F93EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		498961062CF2CE95001F93EE /* Found.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Found.entitlements; sourceTree = "<group>"; };
 		498961082CF2CE95001F93EE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -56,9 +52,7 @@
 		498961342CF2D39A001F93EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		498961382CF2E170001F93EE /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		4989613A2CF2E1A0001F93EE /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
-		4989613C2CF2E75A001F93EE /* FoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundView.swift; sourceTree = "<group>"; };
 		498961402CF2F598001F93EE /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		498961422CF3EE7D001F93EE /* ReceivedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedView.swift; sourceTree = "<group>"; };
 		498961442CF4091A001F93EE /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 		498961462CF423F8001F93EE /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		498961492CFB9120001F93EE /* Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categories.swift; sourceTree = "<group>"; };
@@ -67,6 +61,10 @@
 		498961522CFB9198001F93EE /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		54B9DEF12CFEB324007E0780 /* UIkit test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIkit test.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5434E90F2D012491000EDED9 /* Views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Views; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		498960FA2CF2CE95001F93EE /* Frameworks */ = {
@@ -112,10 +110,8 @@
 				54B9DEF12CFEB324007E0780 /* UIkit test.swift */,
 				498961342CF2D39A001F93EE /* Info.plist */,
 				498961002CF2CE95001F93EE /* FoundApp.swift */,
-				498961022CF2CE95001F93EE /* LostView.swift */,
-				4989613C2CF2E75A001F93EE /* FoundView.swift */,
-				498961422CF3EE7D001F93EE /* ReceivedView.swift */,
 				4989612C2CF2CF6A001F93EE /* AppState.swift */,
+				5434E90F2D012491000EDED9 /* Views */,
 				498961252CF2CF3D001F93EE /* Authentication */,
 				498961372CF2E15C001F93EE /* Profile */,
 				498961482CFB9102001F93EE /* Models */,
@@ -190,6 +186,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5434E90F2D012491000EDED9 /* Views */,
 			);
 			name = Found;
 			packageProductDependencies = (
@@ -268,14 +267,11 @@
 			files = (
 				498961472CF423F8001F93EE /* Application.swift in Sources */,
 				54B9DEF22CFEB328007E0780 /* UIkit test.swift in Sources */,
-				4989613D2CF2E75A001F93EE /* FoundView.swift in Sources */,
 				498961292CF2CF5A001F93EE /* AuthViewModel.swift in Sources */,
-				498961032CF2CE95001F93EE /* LostView.swift in Sources */,
 				498961532CFB9198001F93EE /* NetworkManager.swift in Sources */,
 				4989612B2CF2CF62001F93EE /* AuthService.swift in Sources */,
 				4989614E2CFB9150001F93EE /* Post.swift in Sources */,
 				4989612D2CF2CF6A001F93EE /* AppState.swift in Sources */,
-				498961432CF3EE7D001F93EE /* ReceivedView.swift in Sources */,
 				498961502CFB916A001F93EE /* User.swift in Sources */,
 				498961012CF2CE95001F93EE /* FoundApp.swift in Sources */,
 				498961392CF2E170001F93EE /* ProfileView.swift in Sources */,
