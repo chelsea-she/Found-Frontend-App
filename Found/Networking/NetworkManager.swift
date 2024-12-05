@@ -15,7 +15,7 @@ class NetworkManager {
 
     private let endpoint = "http://34.145.244.103"
 
-    func fetchPosts(colors: [String], category: String, date: Date, userID: String, completion: @escaping ([Post]) -> Void) {
+    func fetchPosts(colors: [String], category: String, userID: String, location: String, description: String, completion: @escaping ([Post]) -> Void) {
         let jsonDecoder = JSONDecoder()
         jsonDecoder.dateDecodingStrategy = .iso8601
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase

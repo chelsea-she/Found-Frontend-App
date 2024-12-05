@@ -35,6 +35,9 @@ struct ProfileView: View {
                 .background(Color.red.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
+//            NavigationLink(destination: ReceivedView()) {
+//                Text("Confirm item reception")
+//            }
         }
         .onAppear {
             viewModel.fetchUserName()
@@ -42,9 +45,9 @@ struct ProfileView: View {
     }
 }
 
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView(viewModel: .init())
-    }
-}
+//struct ProfileView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileView(viewModel: .init())
+//    }
+//}
 

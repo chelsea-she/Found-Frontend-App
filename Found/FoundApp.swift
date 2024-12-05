@@ -41,6 +41,7 @@ struct FoundApp: App {
                             .tabItem {
                                 Label("Found", systemImage: "magnifyingglass")
                             }
+                        
                         ReceivedView()
                             .tabItem {
                                 Label("Received", systemImage: "checkmark.seal")
