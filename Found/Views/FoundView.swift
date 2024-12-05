@@ -30,6 +30,7 @@ struct FoundView: View {
     @State private var selectedTab = 0
     @State private var shouldNavigate = false
     @State private var phoneNumberValid = false
+    @State private var showResetAlert = false
 
     @State private var formPost: Post = Post.dummyData //MARK: change this later
     
@@ -189,6 +190,45 @@ struct FoundView: View {
                             .contentShape(Rectangle())
                             .frame(width: 22, height: 22)
                             Spacer()
+                            Button(action:{
+                                showResetAlert.toggle()
+                            }){
+                                VStack {
+                                    Image(systemName: "arrow.counterclockwise")
+                                    Text("Restart")
+                                        .font(.caption)
+                                }
+                                .foregroundColor(.red)
+                            }
+                            .alert(isPresented: $showResetAlert) {
+                                Alert(
+                                    title: Text("Are you sure?"),
+                                    message: Text("This will reset the form"),
+                                    primaryButton: .destructive(Text("OK")) { //Resets everything
+                                        selectedTab = 0
+                                        category = ""
+                                        itemName = ""
+                                        selectedColors = []
+                                        description = ""
+                                        date = Date()
+                                        location = ""
+                                        drop = ""
+                                        
+                                        selectedImages = []
+                                        
+                                        showImagePickerFound = false
+                                        showDatePicker = false
+                                        selectedTab = 0
+                                        shouldNavigate = false
+                                        phoneNumberValid = false
+                                        showResetAlert = false
+
+                                        formPost = Post.dummyData //MARK: change this later
+                                        
+                                    },
+                                    secondaryButton: .cancel()
+                                )
+                            }
                         }
                     })
                 }
