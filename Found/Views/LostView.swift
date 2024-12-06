@@ -20,34 +20,125 @@ struct LostView: View {
     
     @State var showDatePicker:Bool = false
     
+    @State private var selectedTab = 0
+    @State private var shouldNavigate = false
+    @State private var showIncompleteAlert = false
+
+    @State private var formPost:Post = Post.dummyData
+    
     var body: some View {
-        NavigationView {
-            VStack(alignment: .leading, spacing: 16) {
-                Spacer()
-                Text("Lost something?")
-                    .font(.largeTitle)
-                    .bold()
-                
-                NameSectionLost(itemName: $itemName)
-                CategorySectionLost(category: $category)
-                ColorSectionLost(selectedColors: $selectedColors)
-                DescriptionSectionLost(description: $description)
-                //DatePickerSectionLost(showDatePicker: $showDatePicker, date: $date)
-                LocationSectionLost(location: $location)
-                NavigationLink(destination: UIKitViewControllerWrapperLost()) {//TODO: push do networking here and push to a confirmation page
-                    Text("Search")
-                        .font(.title2)
-                        .frame(width: UIScreen.main.bounds.width-40, height: 50)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+        VStack{
+            LostTabButtonView(selectedTab: $selectedTab)
+
+            
+            ZStack{
+                if(selectedTab == 0){
+                    TabItemView(title: "Lost something?", content:{
+                        NameSectionLost(itemName: $itemName)
+                        CategorySectionLost(category: $category)
+                        ColorSectionLost(selectedColors: $selectedColors)
+                        Spacer()
+                        HStack{
+                            HStack {
+                                Spacer()
+                                Button(action: {
+                                    selectedTab += 1
+                                }) {
+                                    Image(systemName: "arrow.right")
+                                        .foregroundColor(.black)
+                                        .clipShape(Circle())
+                                }
+                                .contentShape(Rectangle())
+                                .frame(width: 22, height: 22)
+                            }
+                        }
+                    })
+                }
+                if(selectedTab == 1){
+                    TabItemView(title: "Where'd you lose it?", content:{
+                        DescriptionSectionLost(description: $description)
+                        //DatePickerSectionLost(showDatePicker: $showDatePicker, date: $date)
+                        LocationSectionLost(location: $location)
+                        Spacer()
+                        Button(action:{//TODO: push do networking here and push to a confirmation page
+                            if(checkFormFinished()){
+                                shouldNavigate = true
+                            }
+                            else{
+                                showIncompleteAlert = true
+                            }
+                        }) {
+                            Text("Search")
+                                .font(.title2)
+                                .frame(width: UIScreen.main.bounds.width-40, height: 50)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .alert("Stop!", isPresented: $showIncompleteAlert, actions: {
+   
+                        }, message: {
+                            Text("Please fill out all form fields!")
+                        })
+                        NavigationLink(
+                            destination: UIKitViewControllerWrapperFound(post: $formPost),
+                            isActive: $shouldNavigate,
+                            label: { EmptyView() }
+                        )
+                        HStack{
+                            Button(action: {
+                                selectedTab -= 1
+                            }) {
+                                Image(systemName: "arrow.left")
+                                    .foregroundColor(.black)
+                                    .clipShape(Circle())
+                            }
+                            .contentShape(Rectangle())
+                            .frame(width: 22, height: 22)
+                            Spacer()
+                        }
+                    })
                 }
             }
-            .padding([.leading, .trailing], 20)
-            .padding(.bottom, 15)
         }
     }
+    func checkFormFinished() -> Bool {
+        if(category==""||itemName==""||selectedColors.count==0||description==""||location==""){
+            return false;
+        }
+        return true;
+    }
 }
+//MARK: tab buttons:
+struct LostTabButtonView: View {
+    @Binding var selectedTab: Int
+    var body: some View{
+        HStack {
+            Spacer()
+            Button(action: { selectedTab = 0 }) {
+                VStack {
+                    Image(systemName: "1.circle")
+                    Text("Description")
+                        .font(.caption)
+                }
+                .foregroundColor(selectedTab == 0 ? .blue : .gray)
+            }
+            Spacer()
+            Button(action: { selectedTab = 1 }) {
+                VStack {
+                    Image(systemName: "2.circle")
+                    Text("Submit")
+                        .font(.caption)
+                }
+                .foregroundColor(selectedTab == 1 ? .blue : .gray)
+            }
+            Spacer()
+        }
+        .padding()
+        .background(Color(.systemGray6))
+    }
+}
+
 //MARK: item name
 struct NameSectionLost: View {
     @Binding var itemName: String
@@ -253,6 +344,6 @@ struct UIKitViewControllerWrapperLost: UIViewControllerRepresentable {
         // No updates needed for this example
     }
 }
-#Preview {
-    LostView()
-}
+//#Preview {
+//    LostView()
+//}

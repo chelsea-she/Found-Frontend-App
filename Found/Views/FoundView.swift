@@ -35,43 +35,17 @@ struct FoundView: View {
     @State private var shouldNavigate = false
     @State private var phoneNumberValid = false
     @State private var showResetAlert = false
-
+    @State private var showIncompleteAlert = false
+    
     @State private var formPost: Post = Post.dummyData //MARK: change this later
     
-    //MARK: layout helper
-    struct TabItemView<Content: View>: View {
-        let title: String
-        let content: Content
-        
-        init(title: String, @ViewBuilder content: () -> Content) {
-            self.title = title
-            self.content = content()
-        }
-        
-        var body: some View {
-            NavigationView {
-                ZStack(alignment: .leading) {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Spacer().frame(height: UIScreen.main.bounds.height/2-220) // Create space for the title
-                        content
-                    }
-                    
-                    Text(title)
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .offset(x:0, y:-140)
-                }
-                .padding([.leading, .trailing], 20)
-            }
-        }
-    }
     
     //MARK: main body
     var body: some View {
         VStack(spacing: 0) {
             
-            TabButtonView(selectedTab: $selectedTab)
-        
+            FoundTabButtonView(selectedTab: $selectedTab)
+            
             ZStack{
                 if selectedTab == 0 {
                     TabItemView(title: "Found something?", content: {
@@ -132,7 +106,7 @@ struct FoundView: View {
                         DropSectionFound(drop: $drop)//MARK: make a location selcetor in the future
                         //MARK: future make a more detailed location descirption
                         DescriptionSectionFound(description: $description)
-
+                        
                         Spacer()
                         HStack {
                             Button(action: {
@@ -164,20 +138,25 @@ struct FoundView: View {
                         PhoneNumberSectionFound(phoneNumber: $phoneNumber, phoneNumberValid: $phoneNumberValid)
                         Spacer()
                         
+                        
                         Button(action:{//TODO: push do networking here and push to a confirmation page
                             if(checkFormFinished()){
                                 updatePost()
-                                uploadImagesToFirebase(images: selectedImages) { result in
-                                        switch result {
-                                        case .success(let urls):
-                                            print("All images uploaded successfully!")
-                                            print("Uploaded URLs: \(urls)")
-                                            // You can save these URLs to Firestore or use them as needed
-                                        case .failure(let error):
-                                            print("Failed to upload images: \(error.localizedDescription)")
-                                        }
-                                    }
                                 shouldNavigate = true
+                                uploadImagesToFirebase(images: selectedImages) { result in
+                                    switch result {
+                                    case .success(let urls):
+                                        print("All images uploaded successfully!")
+                                        print("Uploaded URLs: \(urls)")
+                                        // You can save these URLs to Firestore or use them as needed
+                                    case .failure(let error):
+                                        print("Failed to upload images: \(error.localizedDescription)")
+                                    }
+                                }
+                                
+                            }
+                            else{
+                                showIncompleteAlert.toggle()
                             }
                         }) {
                             Text("Submit!")
@@ -187,6 +166,11 @@ struct FoundView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
+                        .alert("Stop!", isPresented: $showIncompleteAlert, actions: {
+                            
+                        }, message: {
+                            Text("Please fill out all form fields!")
+                        })
                         NavigationLink(
                             destination: UIKitViewControllerWrapperFound(post: $formPost),
                             isActive: $shouldNavigate,
@@ -236,7 +220,7 @@ struct FoundView: View {
                                         shouldNavigate = false
                                         phoneNumberValid = false
                                         showResetAlert = false
-
+                                        
                                         formPost = Post.dummyData //MARK: change this later
                                         
                                     },
@@ -268,7 +252,8 @@ struct FoundView: View {
     }
     
     func updatePost() {
-        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Post.dummyString, locationFound: location, dropLocation: drop, color: selectedColors, category: category, image:"url", fulfilled: false, userID: 1)//MARK: change this
+        
+        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Post.dummyString, locationFound: location, dropLocation: drop, color: selectedColors, category: category, image: [], fulfilled: false, userID: 1)//MARK: change this
     }
     
     func uploadImagesToFirebase(images: [UIImage], completion: @escaping (Result<[String], Error>) -> Void) {
@@ -284,7 +269,6 @@ struct FoundView: View {
                 group.leave()
                 continue
             }
-
             // Get a reference to Firebase Storage
             let storageRef = Storage.storage().reference()
             
@@ -312,22 +296,41 @@ struct FoundView: View {
             }
         }
         
-        // Completion handler after all uploads are done
-        group.notify(queue: .main) {
-            if uploadedURLs.count == images.count {
-                completion(.success(uploadedURLs))
-            } else {
-                let error = NSError(domain: "UploadError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Some images failed to upload."])
-                completion(.failure(error))
+        
+    }
+}
+
+//MARK: layout helper
+struct TabItemView<Content: View>: View {
+    let title: String
+    let content: Content
+    
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        NavigationView {
+            ZStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 16) {
+                    Spacer().frame(height: UIScreen.main.bounds.height/2-220) // Create space for the title
+                    content
+                }
+                
+                Text(title)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .offset(x:0, y:-140)
             }
+            .padding([.leading, .trailing], 20)
+            .padding(.bottom, 15)
         }
     }
-
-
-
 }
+
 //MARK: tab buttons:
-struct TabButtonView: View {
+struct FoundTabButtonView: View {
     @Binding var selectedTab: Int
     var body: some View{
         HStack {
@@ -427,7 +430,7 @@ struct CategorySectionFound: View {
 struct ColorSectionFound: View {
     @Binding var selectedColors: [String]
     @State private var colorOptions: [ColorOption] = Categories.init().colorOptions
-
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text("Color")
@@ -464,7 +467,7 @@ struct ColorSectionFound: View {
                         .padding(3)
                         .background(colorOptions[colorOptions.firstIndex(where: { $0.name == selectedColor })!].color.opacity(0.7))
                         .cornerRadius(8)
-                        
+                    
                 }
             }
         }
@@ -587,7 +590,7 @@ struct PhoneNumberSectionFound: View {
                 .onChange(of: phoneNumber){
                     newValue in phoneNumberValid = validatePhoneNumber(newValue)
                 }
-                
+            
         }
     }
     
@@ -609,13 +612,13 @@ struct DatePickerPopupFound: View {
     
     let startDate = Calendar.current.date(byAdding: .day, value: -10, to: Date())! // 5 days ago
     let endDate = Calendar.current.date(byAdding: .day, value: 0, to: Date())! // 5 days in the future
-
+    
     var body: some View {
         VStack {
             Text("Select Date and Time")
                 .font(.headline)
                 .padding()
-
+            
             DatePicker(
                 "Select Date and Time",
                 selection: $selectedDate,
@@ -625,7 +628,7 @@ struct DatePickerPopupFound: View {
             .datePickerStyle(WheelDatePickerStyle())
             .labelsHidden()
             .padding()
-
+            
             Button(action: {
                 dismiss() // Dismiss the popup
             }) {
@@ -702,36 +705,36 @@ struct ImagePickerFound: View {
 
 struct PhotoPickerFound: UIViewControllerRepresentable {
     @Binding var selectedImages: [UIImage]
-
+    
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
         config.filter = .images
         config.selectionLimit = 3
-
+        
         let picker = PHPickerViewController(configuration: config)
         picker.delegate = context.coordinator
         return picker
     }
-
+    
     func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
-
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-
+    
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
         let parent: PhotoPickerFound
-
+        
         init(_ parent: PhotoPickerFound) {
             self.parent = parent
         }
-
+        
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated: true)
-
+            
             let group = DispatchGroup()
             var images: [UIImage] = []
-
+            
             for result in results {
                 let provider = result.itemProvider
                 if provider.canLoadObject(ofClass: UIImage.self) {
@@ -744,7 +747,7 @@ struct PhotoPickerFound: UIViewControllerRepresentable {
                     }
                 }
             }
-
+            
             group.notify(queue: .main) {
                 self.parent.selectedImages = images
             }
