@@ -1,4 +1,4 @@
-Cornell Lost and Found App
+**Cornell Lost and Found App**
 
 Link to frontend: https://github.com/chelsea-she/Found-Frontend-App
 
@@ -13,7 +13,9 @@ Link to backend: https://github.com/Scott-Fukuda/Found-Backend-App
 
 <img src="https://github.com/user-attachments/assets/46fb3dd7-9346-4eb3-902e-deea727c2da4" alt="Found Post Submission, pt4" width="150">
 
+
 **Description**
+
 Found is a forum where users can post lost items and other users can create requests to retrieve said items. When a user finds a lost item, they can create a "found post".
 Users can navigate to the "found post" tab, where they will be prompted with several questions about the item they've found. This post is then added to a database of posts.
 When another user realizes they've lost an item, they can submit a "lost request" containing information about their lost item. This "lost request" is matched up against the
@@ -22,6 +24,7 @@ to claim items that do not belong to them. Once a user identifies their lost ite
 security measures, users can only make 3 "lost requests" per week, and each user can only create an account with a Cornell email through Google login.
 
 **How Frontend Requirements Are Met**
+
 We have 9 views that we navigate through. 
 1) AuthView is the sign in page. Users can sign in with either an email or google account through Firebase.
 2) SignupView is for first time users, to finish creating their account including a password, displayName, phone and a bio TextField.
