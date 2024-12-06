@@ -4,6 +4,16 @@
 //
 //  Created by Ryan Ye on 11/23/24.
 //
+import Foundation
+struct FoundResponseData: Decodable{
+    let success: Bool
+    let post: Post
+}
+
+struct LostResponseData: Decodable{
+    let success: Bool
+    let posts: [Post]
+}
 
 struct Post : Codable {
     let id: Int

@@ -13,9 +13,9 @@ class NetworkManager {
 
     private init(){}
 
-    private let endpoint = "http://34.145.244.103"
+    private let endpoint = "http://34.145.244.103"//MARK: change this
 
-    func fetchPosts(colors: [String], category: String, userID: Int, location: String, name:String, description: String, completion: @escaping ([Post]) -> Void) {
+    func fetchLostPosts(colors: [String], category: String, userID: Int, location: String, name:String, description: String, completion: @escaping ([Post]) -> Void) {
         let jsonDecoder = JSONDecoder()
         jsonDecoder.dateDecodingStrategy = .iso8601
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -26,37 +26,44 @@ class NetworkManager {
             "color":colors,
             "description": description,
             "locationLost":location,
-        ]
+        ]//MARK: change the endpoint
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
             .validate()
-            .responseDecodable(of: [Post].self, decoder: jsonDecoder) {
-                posts in switch posts.result {
-                case .success(let posts):
-                    completion(posts)
+            .responseDecodable(of: LostResponseData.self, decoder: jsonDecoder) {
+                response in switch response.result {
+                case .success(let response):
+                    completion(response.posts)
                 case .failure(let error):
-                    print("Error in NetworkManager.fetchPosts(): \(error)")
+                    print("Error in NetworkManager.fetchLostPosts(): \(error)")
                 }
             }
     }
 
-    func uploadPost(post: Post, completion: @escaping (Bool) -> Void){
+    func uploadFoundPost(post: Post, userID: Int, completion: @escaping (Bool) -> Void){
         let jsonDecoder = JSONDecoder()
         jsonDecoder.dateDecodingStrategy = .iso8601
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
 
         let parameters:Parameters = [
-            :
+            "itemName":post.itemName,
+            "description":post.description,
+            "locationFound":post.locationFound,
+            "dropLocation":post.dropLocation,
+            "color":post.color,
+            "category":post.category,
+            "image":post.image,
+            "fulfilled":post.fulfilled,
         ]
-        AF.request(endpoint, method: .post, parameters: parameters)
+        AF.request(endpoint, method: .post, parameters: parameters)//MARK: change the endpoint
             .validate()
-            .responseDecodable(of:Post.self, decoder: jsonDecoder)
+            .responseDecodable(of:FoundResponseData.self, decoder: jsonDecoder)
             {
                 response in
                 //handle response
                 //print(response)
                 switch response.result {
-                case .success(let post):
-                    print("Successfully uploaded post: \(post)")
+                case .success(let response):
+                    print("Successfully uploaded post: \(response.post)")
                     completion(true)
                 case .failure(let error):
                     print("Error in NetworkManager.uploadPost: \(error.localizedDescription)")
