@@ -31,42 +31,16 @@ struct FoundView: View {
     @State private var shouldNavigate = false
     @State private var phoneNumberValid = false
     @State private var showResetAlert = false
+    @State private var showIncompleteAlert = false
 
     @State private var formPost: Post = Post.dummyData //MARK: change this later
     
-    //MARK: layout helper
-    struct TabItemView<Content: View>: View {
-        let title: String
-        let content: Content
-        
-        init(title: String, @ViewBuilder content: () -> Content) {
-            self.title = title
-            self.content = content()
-        }
-        
-        var body: some View {
-            NavigationView {
-                ZStack(alignment: .leading) {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Spacer().frame(height: UIScreen.main.bounds.height/2-220) // Create space for the title
-                        content
-                    }
-                    
-                    Text(title)
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .offset(x:0, y:-140)
-                }
-                .padding([.leading, .trailing], 20)
-            }
-        }
-    }
     
     //MARK: main body
     var body: some View {
         VStack(spacing: 0) {
             
-            TabButtonView(selectedTab: $selectedTab)
+            FoundTabButtonView(selectedTab: $selectedTab)
         
             ZStack{
                 if selectedTab == 0 {
@@ -160,10 +134,14 @@ struct FoundView: View {
                         PhoneNumberSectionFound(phoneNumber: $phoneNumber, phoneNumberValid: $phoneNumberValid)
                         Spacer()
                         
+                        
                         Button(action:{//TODO: push do networking here and push to a confirmation page
                             if(checkFormFinished()){
                                 updatePost()
                                 shouldNavigate = true
+                            }
+                            else{
+                                showIncompleteAlert.toggle()
                             }
                         }) {
                             Text("Submit!")
@@ -173,6 +151,11 @@ struct FoundView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
+                        .alert("Stop!", isPresented: $showIncompleteAlert, actions: {
+   
+                        }, message: {
+                            Text("Please fill out all form fields!")
+                        })
                         NavigationLink(
                             destination: UIKitViewControllerWrapperFound(post: $formPost),
                             isActive: $shouldNavigate,
@@ -258,8 +241,38 @@ struct FoundView: View {
     }
 
 }
+
+//MARK: layout helper
+struct TabItemView<Content: View>: View {
+    let title: String
+    let content: Content
+    
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        NavigationView {
+            ZStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 16) {
+                    Spacer().frame(height: UIScreen.main.bounds.height/2-220) // Create space for the title
+                    content
+                }
+                
+                Text(title)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .offset(x:0, y:-140)
+            }
+            .padding([.leading, .trailing], 20)
+            .padding(.bottom, 15)
+        }
+    }
+}
+
 //MARK: tab buttons:
-struct TabButtonView: View {
+struct FoundTabButtonView: View {
     @Binding var selectedTab: Int
     var body: some View{
         HStack {
