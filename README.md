@@ -1,16 +1,17 @@
 Cornell Lost and Found App
 
 Link to frontend: https://github.com/chelsea-she/Found-Frontend-App
+
 Link to backend: https://github.com/Scott-Fukuda/Found-Backend-App
 
-<img src="https://github.com/user-attachments/assets/86b57444-ec35-46b4-b14a-a2311d30969e" alt="Lost Request, pt1" width="200">
-<img src="https://github.com/user-attachments/assets/99e32613-f8df-4a63-bbff-5a22c5e27a1e" alt="Lost Request, pt2" width="200">
+<img src="https://github.com/user-attachments/assets/86b57444-ec35-46b4-b14a-a2311d30969e" alt="Lost Request, pt1" width="150">
+<img src="https://github.com/user-attachments/assets/99e32613-f8df-4a63-bbff-5a22c5e27a1e" alt="Lost Request, pt2" width="150">
 
-<img src="https://github.com/user-attachments/assets/e7c3d754-5114-4f89-a93e-a5e06fcd73d9" alt="Found Post, pt1" width="200">
-<img src="https://github.com/user-attachments/assets/ef8dcfbe-4497-4aa9-af1f-274c43d1463d" alt="Found Post, pt2" width="200">
-<img src="https://github.com/user-attachments/assets/357149e4-c52c-424d-8f6a-8350eae39489" alt="Found Post, pt3" width="200">
+<img src="https://github.com/user-attachments/assets/e7c3d754-5114-4f89-a93e-a5e06fcd73d9" alt="Found Post, pt1" width="150">
+<img src="https://github.com/user-attachments/assets/ef8dcfbe-4497-4aa9-af1f-274c43d1463d" alt="Found Post, pt2" width="150">
+<img src="https://github.com/user-attachments/assets/357149e4-c52c-424d-8f6a-8350eae39489" alt="Found Post, pt3" width="150">
 
-<img src="https://github.com/user-attachments/assets/46fb3dd7-9346-4eb3-902e-deea727c2da4" alt="Found Post Submission, pt4" width="200">
+<img src="https://github.com/user-attachments/assets/46fb3dd7-9346-4eb3-902e-deea727c2da4" alt="Found Post Submission, pt4" width="150">
 
 **Description**
 Found is a forum where users can post lost items and other users can create requests to retrieve said items. When a user finds a lost item, they can create a "found post".
