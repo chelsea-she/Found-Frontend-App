@@ -78,7 +78,6 @@ class NetworkManager {
                 case .success(let response):
                     print(response)
                     print("Successfully uploaded post: \(response.data)")
-                    print("truejidoijoa wijoawdjoiawjdoiajwdoi jowijoajwdoiwjoij")
                     completion(true)
                 case .failure(let error):
                     print("Error in NetworkManager.uploadPost: \(error.localizedDescription)")

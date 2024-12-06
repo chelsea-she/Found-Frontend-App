@@ -9,7 +9,7 @@ import UIKit
 
 class ViewLostQueries: UIViewController {
     private var posts:[Post]
-    private var success:Bool
+    var success:Bool
     
     init(success: Bool, posts:[Post]){
         self.posts = posts

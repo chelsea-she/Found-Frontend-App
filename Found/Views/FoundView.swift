@@ -698,25 +698,24 @@ struct DatePickerPopupFound: View {
 //MARK: wrapper
 struct UIKitViewControllerWrapperFound: UIViewControllerRepresentable {
     @Binding var post: Post
+    @State private var successful: Bool = false
+    @State private var isLoading: Bool = true  // Track if the network request is in progress
+    
     func makeUIViewController(context: Context) -> FoundPushSuccessPage {
-        //TODO: do networking here, if successful, return, else return a failed page or just don't return a page?
-        //TODO: should we have a review and submit page?
-        //TODO: this is currently set to push to a test page
-        var successful = false
-        NetworkManager.shared.uploadFoundPost(post: post, userID: 1){
-            success in
-            print("success")
+        let placeholderPage = FoundPushSuccessPage(isLoading: true, success: false, post: post)
+        
+        NetworkManager.shared.uploadFoundPost(post: post, userID: 1) { success in
             successful = success
-            print(success)
-            
+            isLoading = false
         }
-        print("hello \(successful)")
-        return FoundPushSuccessPage(success: successful, post: post)
-
+        
+        return placeholderPage
     }
     
     func updateUIViewController(_ uiViewController: FoundPushSuccessPage, context: Context) {
-        // No updates needed for this example
+        if !isLoading {
+            uiViewController.configure(isLoading: isLoading, success: successful)
+        }
     }
 }
 
