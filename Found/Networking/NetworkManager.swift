@@ -15,7 +15,7 @@ class NetworkManager {
 
     private let endpoint = "http://34.145.244.103"//MARK: change this
 
-    func fetchLostPosts(colors: [String], category: String, userID: Int, location: String, name:String, description: String, completion: @escaping ([Post]) -> Void) {
+    func fetchLostPosts(colors: String, category: String, userID: Int, location: String, name:String, description: String, completion: @escaping (Bool, [Post]) -> Void) {
         let jsonDecoder = JSONDecoder()
         jsonDecoder.dateDecodingStrategy = .iso8601
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -27,28 +27,31 @@ class NetworkManager {
             "description": description,
             "locationLost":location,
         ]//MARK: change the endpoint
-        AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
+        AF.request(endpoint+"/api/lost-request/\(userID)/", method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
             .validate()
             .responseDecodable(of: LostResponseData.self, decoder: jsonDecoder) {
                 response in switch response.result {
                 case .success(let response):
-                    completion(response.data)
+                    completion(true, response.data)
                 case .failure(let error):
                     print("Error in NetworkManager.fetchLostPosts(): \(error)")
+                    completion(false,[])
                 }
             }
     }
 
     func uploadFoundPost(post: Post, userID: Int, completion: @escaping (Bool) -> Void){
         let jsonDecoder = JSONDecoder()
-        jsonDecoder.dateDecodingStrategy = .iso8601
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSZZZZZ"
+        jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
 
         let parameters:Parameters = [
-            "itemName":post.itemName,
+            "item_name":post.itemName,
             "description":post.description,
-            "locationFound":post.locationFound,
-            "dropLocation":post.dropLocation,
+            "location_found":post.locationFound,
+            "drop_location":post.dropLocation,
             "color":post.color,
             "category":post.category,
             "image":post.image,
@@ -56,17 +59,26 @@ class NetworkManager {
         ]
         
         print(parameters)
-        
-        AF.request(endpoint+"/api/users/\(userID)/items/", method: .post, parameters: parameters)//MARK: change the endpoint
-            .validate()
+        let urlString = "\(endpoint)/api/users/\(String(userID))/items/"
+        print(urlString)
+        AF.request(urlString, method: .post, parameters: parameters, encoding: JSONEncoding.default)//MARK: change the endpoint
+            .validate(statusCode: 200..<300)
             .responseDecodable(of:FoundResponseData.self, decoder: jsonDecoder)
             {
                 response in
                 //handle response
                 print(response)
+                if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
+                    print("Raw Response JSON: \(jsonString)")
+                } else {
+                    print("No response body or data was empty.")
+                }
+                
                 switch response.result {
                 case .success(let response):
+                    print(response)
                     print("Successfully uploaded post: \(response.data)")
+                    print("truejidoijoa wijoawdjoiawjdoiajwdoi jowijoajwdoiwjoij")
                     completion(true)
                 case .failure(let error):
                     print("Error in NetworkManager.uploadPost: \(error.localizedDescription)")

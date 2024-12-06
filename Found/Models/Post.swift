@@ -5,12 +5,12 @@
 //  Created by Ryan Ye on 11/23/24.
 //
 import Foundation
-struct FoundResponseData: Decodable{
+struct FoundResponseData: Codable{
     let success: Bool
     let data: Post
 }
 
-struct LostResponseData: Decodable{
+struct LostResponseData: Codable{
     let success: Bool
     let data: [Post]
 }
@@ -26,11 +26,11 @@ struct Post : Codable {
     var category: String
     var image: String
     var fulfilled: Bool
-    let userID: Int
+    let userId: Int
 }
 
 extension Post{
-    public static var dummyData = Post(id: dummyID, itemName: dummyString, description: dummyString, timestamp: Date(), locationFound: dummyString, dropLocation: dummyString, color: dummyString, category: dummyString, image: dummyString, fulfilled: false, userID: dummyID)
+    public static var dummyData = Post(id: dummyID, itemName: dummyString, description: dummyString, timestamp: Date(), locationFound: dummyString, dropLocation: dummyString, color: dummyString, category: dummyString, image: dummyString, fulfilled: false, userId: dummyID)
     public static var dummyID = -600673
     public static var dummyString = "today"
 }

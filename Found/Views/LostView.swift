@@ -25,6 +25,8 @@ struct LostView: View {
     @State private var showIncompleteAlert = false
 
     @State private var formPost:Post = Post.dummyData
+    @State var isLoading = false
+    private var colorString: String = ""
     
     var body: some View {
         VStack{
@@ -60,11 +62,36 @@ struct LostView: View {
                         //DatePickerSectionLost(showDatePicker: $showDatePicker, date: $date)
                         LocationSectionLost(location: $location)
                         Spacer()
+                        
+                        HStack{
+                            Spacer()
+                            if isLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle())
+                                    .padding()
+                            }
+                            Spacer()
+                        }
+                        
                         Button(action:{//TODO: push do networking here and push to a confirmation page
+                            isLoading = true
                             if(checkFormFinished()){
+                                var colorString = "['"
+                                var firstTime = true
+                                for color in selectedColors {
+                                    if firstTime {
+                                        colorString += color
+                                        firstTime = false
+                                    } else {
+                                        colorString += "', '\(color)"
+                                    }
+                                }
+                                colorString += "']"
+                                
                                 shouldNavigate = true
                             }
                             else{
+                                isLoading = false
                                 showIncompleteAlert = true
                             }
                         }) {
@@ -81,7 +108,7 @@ struct LostView: View {
                             Text("Please fill out all form fields!")
                         })
                         NavigationLink(
-                            destination: UIKitViewControllerWrapperFound(post: $formPost),
+                            destination: UIKitViewControllerWrapperLost(name: itemName, category: category, color: colorString, description: description, location: location, isLoading: $isLoading),
                             isActive: $shouldNavigate,
                             label: { EmptyView() }
                         )
@@ -335,12 +362,28 @@ struct DatePickerPopupLost: View {
 }
 //MARK: wrapper
 struct UIKitViewControllerWrapperLost: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> FoundPushSuccessPage {
+    var name: String
+    var category: String
+    var color: String
+    var description: String
+    var location: String
+    @Binding var isLoading: Bool
+    func makeUIViewController(context: Context) -> ViewLostQueries {
         //TODO: do networking here, if successful, return, push a collectionview page. this is currently set to push to a test page
-        return FoundPushSuccessPage(success: false, post:Post.dummyData)
+        var successful = false
+        var retPosts:[Post]=[]
+        NetworkManager.shared.fetchLostPosts(colors: color, category: category, userID: 1, location: location, name:name, description: description){
+            success, posts in
+            print("success")
+            successful = success
+            retPosts=posts
+        }
+        isLoading = false
+        return ViewLostQueries(success: successful, posts: retPosts)
+        
     }
     
-    func updateUIViewController(_ uiViewController: FoundPushSuccessPage, context: Context) {
+    func updateUIViewController(_ uiViewController: ViewLostQueries, context: Context) {
         // No updates needed for this example
     }
 }

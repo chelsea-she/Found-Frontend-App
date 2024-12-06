@@ -295,7 +295,7 @@ struct FoundView: View {
         colorString += "']"
         
         
-        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Date(), locationFound: location, dropLocation: drop, color: colorString, category: category, image: Post.dummyString, fulfilled: false, userID: 1)//MARK: change this
+        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Date(), locationFound: location, dropLocation: drop, color: colorString, category: category, image: Post.dummyString, fulfilled: false, userId: 1)//MARK: change this
     }
     
     func uploadImagesToFirebase(images: [UIImage], completion: @escaping (Result<[String], Error>) -> Void) {
@@ -707,7 +707,10 @@ struct UIKitViewControllerWrapperFound: UIViewControllerRepresentable {
             success in
             print("success")
             successful = success
+            print(success)
+            
         }
+        print("hello \(successful)")
         return FoundPushSuccessPage(success: successful, post: post)
 
     }

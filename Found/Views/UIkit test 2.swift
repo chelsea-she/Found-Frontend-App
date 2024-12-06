@@ -34,6 +34,7 @@ class ViewLostQueries: UIViewController {
     
     func successView(){
         //view controller goes here
+        
     }
     
     func unsuccessView(){
