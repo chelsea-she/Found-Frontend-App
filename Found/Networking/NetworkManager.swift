@@ -57,7 +57,7 @@ class NetworkManager {
         
         print(parameters)
         
-        AF.request(endpoint, method: .post, parameters: parameters)//MARK: change the endpoint
+        AF.request(endpoint+"/api/users/\(userID)/items/", method: .post, parameters: parameters)//MARK: change the endpoint
             .validate()
             .responseDecodable(of:FoundResponseData.self, decoder: jsonDecoder)
             {

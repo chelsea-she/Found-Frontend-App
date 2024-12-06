@@ -2,18 +2,33 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.107055370945-cit5neboi6om7poitpseg4fefsguld4l</string>
-			</array>
-		</dict>
-	</array>
-	<key>GIDClientID</key>
-	<string>107055370945-cit5neboi6om7poitpseg4fefsguld4l.apps.googleusercontent.com</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.107055370945-cit5neboi6om7poitpseg4fefsguld4l</string>
+            </array>
+        </dict>
+    </array>
+    <key>GIDClientID</key>
+    <string>107055370945-cit5neboi6om7poitpseg4fefsguld4l.apps.googleusercontent.com</string>
+    
+    <!-- App Transport Security (ATS) Exception -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>34.145.244.103</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+            </dict>
+        </dict>
+    </dict>
 </dict>
 </plist>

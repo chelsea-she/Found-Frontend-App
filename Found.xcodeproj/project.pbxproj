@@ -35,6 +35,7 @@
 		498961532CFB9198001F93EE /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961522CFB9198001F93EE /* NetworkManager.swift */; };
 		49C45B5F2D01657500B7620A /* GoogleSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C45B5E2D01657500B7620A /* GoogleSignupView.swift */; };
 		49C45B6D2D02A58800B7620A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 49C45B6C2D02A58800B7620A /* GoogleService-Info.plist */; };
+		542751972D036C1300E25D56 /* UIkit test 2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542751962D036C1300E25D56 /* UIkit test 2.swift */; };
 		542946762CFEE5DB00E71477 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 542946752CFEE5DB00E71477 /* Alamofire */; };
 		54B734D62D0256EF00B13C9C /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 54B734D52D0256EF00B13C9C /* PhoneNumberKit */; };
 		54B9DEF22CFEB328007E0780 /* UIkit test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B9DEF12CFEB324007E0780 /* UIkit test.swift */; };
@@ -62,6 +63,7 @@
 		498961522CFB9198001F93EE /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		49C45B5E2D01657500B7620A /* GoogleSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignupView.swift; sourceTree = "<group>"; };
 		49C45B6C2D02A58800B7620A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		542751962D036C1300E25D56 /* UIkit test 2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIkit test 2.swift"; sourceTree = "<group>"; };
 		54B9DEF12CFEB324007E0780 /* UIkit test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIkit test.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				54B9DEF12CFEB324007E0780 /* UIkit test.swift */,
+				542751962D036C1300E25D56 /* UIkit test 2.swift */,
 				498961342CF2D39A001F93EE /* Info.plist */,
 				498961002CF2CE95001F93EE /* FoundApp.swift */,
 				4989612C2CF2CF6A001F93EE /* AppState.swift */,
@@ -287,6 +290,7 @@
 				498961452CF4091A001F93EE /* SignupView.swift in Sources */,
 				498961272CF2CF4B001F93EE /* AuthView.swift in Sources */,
 				4989614A2CFB9120001F93EE /* Categories.swift in Sources */,
+				542751972D036C1300E25D56 /* UIkit test 2.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
