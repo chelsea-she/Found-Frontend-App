@@ -86,7 +86,7 @@ struct AuthView: View {
                     }
                 }
                 .navigationDestination(isPresented: $appState.isFirstTimeUser) {
-                    SignupView(viewModel: viewModel)
+                    SignupView(user:$user, viewModel: viewModel)
                 }
                 .navigationDestination(isPresented: $appState.loggedIn) {
                     LostView(user:$user)

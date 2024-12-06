@@ -34,7 +34,7 @@ struct FoundApp: App {
                         .environmentObject(appState)
                 }
                 else {
-                    SignupView(viewModel: authViewModel)
+                    SignupView(user:$user, viewModel: authViewModel)
                         .environmentObject(appState)
                 }
             }

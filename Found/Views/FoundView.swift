@@ -41,6 +41,12 @@ struct FoundView: View {
     @State private var formPost: Post = Post.dummyData //MARK: change this later
     @State private var isLoading: Bool = false
     
+    init(user: Binding<AppUser?>) {
+        _user = user
+       
+        
+    }
+    
     //MARK: main body
     var body: some View {
         VStack(spacing: 0) {
@@ -159,7 +165,7 @@ struct FoundView: View {
                                             print("Uploaded URLs: \(urls)")
                                             // You can save these URLs to Firestore or use them as needed
                                             
-                                            var urlString = "['"
+                                            var urlString = ""
                                             var firstTime = true
                                             for url in urls {
                                                 if firstTime {
@@ -169,7 +175,7 @@ struct FoundView: View {
                                                     urlString += "', '\(url)"
                                                 }
                                             }
-                                            urlString += "']"
+                                            
                                             formPost.image = urlString
                                             
                                             shouldNavigate = true

@@ -17,6 +17,7 @@ struct SignupView: View {
     @State private var bio = ""
     @State private var phone = ""
     @State private var isPickerPresented = false
+    @Binding var user: AppUser?
     
     @EnvironmentObject var appState: AppState
     @ObservedObject var viewModel: AuthViewModel
@@ -82,8 +83,14 @@ struct SignupView: View {
     
     private func completeRegistration() {
         // Simplified action to set `isFirstTimeUser` to false
-        appState.isFirstTimeUser = false
-        appState.loggedIn = true
-        viewModel.authenticate(appState: appState)
+        NetworkManager.shared.createNewUser(profileImage: "url", username: displayName, bio: bio, email: Auth.auth().currentUser!.email!, phone: phone, licenseApprove: true) {
+            success, newUser in
+            if(success){
+                appState.isFirstTimeUser = false
+                appState.loggedIn = true
+                viewModel.authenticate(appState: appState)
+                user = newUser
+            }
+        }
     }
 }
