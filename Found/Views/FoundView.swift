@@ -36,7 +36,7 @@ struct FoundView: View {
     @State private var phoneNumberValid = false
     @State private var showResetAlert = false
     @State private var showIncompleteAlert = false
-    
+
     @State private var formPost: Post = Post.dummyData //MARK: change this later
     
     
@@ -45,7 +45,7 @@ struct FoundView: View {
         VStack(spacing: 0) {
             
             FoundTabButtonView(selectedTab: $selectedTab)
-            
+
             ZStack{
                 if selectedTab == 0 {
                     TabItemView(title: "Found something?", content: {
@@ -158,6 +158,9 @@ struct FoundView: View {
                             else{
                                 showIncompleteAlert.toggle()
                             }
+                            else{
+                                showIncompleteAlert.toggle()
+                            }
                         }) {
                             Text("Submit!")
                                 .font(.title2)
@@ -167,7 +170,7 @@ struct FoundView: View {
                                 .cornerRadius(10)
                         }
                         .alert("Stop!", isPresented: $showIncompleteAlert, actions: {
-                            
+
                         }, message: {
                             Text("Please fill out all form fields!")
                         })
