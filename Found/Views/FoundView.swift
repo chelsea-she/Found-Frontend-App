@@ -8,6 +8,10 @@
 import SwiftUI
 import PhotosUI
 import PhoneNumberKit
+import Firebase
+import FirebaseStorage
+import SwiftUI
+
 
 struct FoundView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
@@ -163,6 +167,16 @@ struct FoundView: View {
                         Button(action:{//TODO: push do networking here and push to a confirmation page
                             if(checkFormFinished()){
                                 updatePost()
+                                uploadImagesToFirebase(images: selectedImages) { result in
+                                        switch result {
+                                        case .success(let urls):
+                                            print("All images uploaded successfully!")
+                                            print("Uploaded URLs: \(urls)")
+                                            // You can save these URLs to Firestore or use them as needed
+                                        case .failure(let error):
+                                            print("Failed to upload images: \(error.localizedDescription)")
+                                        }
+                                    }
                                 shouldNavigate = true
                             }
                         }) {
@@ -256,6 +270,60 @@ struct FoundView: View {
     func updatePost() {
         formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Post.dummyString, locationFound: location, dropLocation: drop, color: selectedColors, category: category, image:"url", fulfilled: false, userID: 1)//MARK: change this
     }
+    
+    func uploadImagesToFirebase(images: [UIImage], completion: @escaping (Result<[String], Error>) -> Void) {
+        var uploadedURLs: [String] = []
+        let group = DispatchGroup() // To track completion of all uploads
+        
+        for image in images {
+            group.enter() // Enter the group for each image
+            
+            // Convert UIImage to Data
+            guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+                print("Failed to convert image to data")
+                group.leave()
+                continue
+            }
+
+            // Get a reference to Firebase Storage
+            let storageRef = Storage.storage().reference()
+            
+            // Create a unique file name for the image
+            let fileName = UUID().uuidString
+            let imageRef = storageRef.child("images/\(fileName).jpg")
+            
+            // Upload the image to Firebase Storage
+            imageRef.putData(imageData, metadata: nil) { metadata, error in
+                if let error = error {
+                    print("Error uploading image: \(error.localizedDescription)")
+                    group.leave()
+                } else {
+                    // Get the download URL
+                    imageRef.downloadURL { url, error in
+                        if let error = error {
+                            print("Error getting download URL: \(error.localizedDescription)")
+                        } else if let downloadURL = url {
+                            print("Uploaded image URL: \(downloadURL.absoluteString)")
+                            uploadedURLs.append(downloadURL.absoluteString)
+                        }
+                        group.leave()
+                    }
+                }
+            }
+        }
+        
+        // Completion handler after all uploads are done
+        group.notify(queue: .main) {
+            if uploadedURLs.count == images.count {
+                completion(.success(uploadedURLs))
+            } else {
+                let error = NSError(domain: "UploadError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Some images failed to upload."])
+                completion(.failure(error))
+            }
+        }
+    }
+
+
 
 }
 //MARK: tab buttons:
