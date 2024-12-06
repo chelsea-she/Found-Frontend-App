@@ -34,6 +34,7 @@
 		4989614E2CFB9150001F93EE /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989614D2CFB9150001F93EE /* Post.swift */; };
 		498961502CFB916A001F93EE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4989614F2CFB916A001F93EE /* User.swift */; };
 		498961532CFB9198001F93EE /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498961522CFB9198001F93EE /* NetworkManager.swift */; };
+		49C45B5F2D01657500B7620A /* GoogleSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C45B5E2D01657500B7620A /* GoogleSignupView.swift */; };
 		542946762CFEE5DB00E71477 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 542946752CFEE5DB00E71477 /* Alamofire */; };
 		54B734D62D0256EF00B13C9C /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 54B734D52D0256EF00B13C9C /* PhoneNumberKit */; };
 		54B9DEF22CFEB328007E0780 /* UIkit test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B9DEF12CFEB324007E0780 /* UIkit test.swift */; };
@@ -60,6 +61,7 @@
 		4989614D2CFB9150001F93EE /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		4989614F2CFB916A001F93EE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		498961522CFB9198001F93EE /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		49C45B5E2D01657500B7620A /* GoogleSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignupView.swift; sourceTree = "<group>"; };
 		54B9DEF12CFEB324007E0780 /* UIkit test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIkit test.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -140,6 +142,7 @@
 			children = (
 				498961262CF2CF4B001F93EE /* AuthView.swift */,
 				498961442CF4091A001F93EE /* SignupView.swift */,
+				49C45B5E2D01657500B7620A /* GoogleSignupView.swift */,
 				498961282CF2CF5A001F93EE /* AuthViewModel.swift */,
 				4989612A2CF2CF62001F93EE /* AuthService.swift */,
 				498961462CF423F8001F93EE /* Application.swift */,
@@ -271,6 +274,7 @@
 			files = (
 				498961472CF423F8001F93EE /* Application.swift in Sources */,
 				54B9DEF22CFEB328007E0780 /* UIkit test.swift in Sources */,
+				49C45B5F2D01657500B7620A /* GoogleSignupView.swift in Sources */,
 				498961292CF2CF5A001F93EE /* AuthViewModel.swift in Sources */,
 				498961532CFB9198001F93EE /* NetworkManager.swift in Sources */,
 				4989612B2CF2CF62001F93EE /* AuthService.swift in Sources */,
@@ -412,7 +416,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Found/Preview Content\"";
-				DEVELOPMENT_TEAM = 24HFUZJ6RB;
+				DEVELOPMENT_TEAM = QPS8AP85BK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -433,7 +437,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = chelseashe.com.Found;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chelseashe.Found;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -452,7 +456,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Found/Preview Content\"";
-				DEVELOPMENT_TEAM = 24HFUZJ6RB;
+				DEVELOPMENT_TEAM = QPS8AP85BK;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -473,7 +477,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = chelseashe.com.Found;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chelseashe.Found;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";

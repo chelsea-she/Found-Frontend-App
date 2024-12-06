@@ -49,6 +49,7 @@ class AuthViewModel: ObservableObject {
                         isPasswordVisible = true
                         isLoading = false // Reset loading state after operation
                         if !userExists {
+                            appState.loggedIn = false
                             appState.isFirstTimeUser = true
                         }
                     }
@@ -93,11 +94,21 @@ class AuthViewModel: ObservableObject {
         GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { result, error in
             if let error = error {
                 print("Google Sign-In Error: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    appState.isGoogleUser = false
+                    appState.isFirstTimeUser = true
+                    appState.loggedIn = false
+                }
                 return
             }
 
             guard let user = result?.user, let idToken = user.idToken else {
                 print("Failed to retrieve user or token")
+                DispatchQueue.main.async {
+                    appState.isGoogleUser = false
+                    appState.isFirstTimeUser = true
+                    appState.loggedIn = false
+                }
                 return
             }
 
@@ -109,54 +120,70 @@ class AuthViewModel: ObservableObject {
             Auth.auth().signIn(with: credential) { authResult, error in
                 if let error = error {
                     print("Firebase Sign-In Error: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        appState.isGoogleUser = false
+                        appState.loggedIn = false
+                    }
                     return
                 }
 
                 guard let user = authResult?.user else { return }
 
-                print("User signed in: \(user.email ?? "No Email")")
-
-                // Check Firestore for user existence
-                let db = Firestore.firestore()
-                let userDoc = db.collection("users").document(user.uid)
-
-                userDoc.getDocument { document, error in
-                    if let error = error {
-                        print("Error checking user existence: \(error.localizedDescription)")
-                        return
-                    }
-
-                    if let document = document, document.exists {
-                        print("User already exists: \(document.data() ?? [:])")
-                        DispatchQueue.main.async {
-                            appState.loggedIn = true
-                        }
-                    } else {
-                        // First-time user
-                        print("First-time user. Creating profile...")
-                        DispatchQueue.main.async {
-                            appState.isFirstTimeUser = true
-                        }
-
-                        userDoc.setData([
-                            "email": user.email ?? "",
-                            "displayName": user.displayName ?? "",
-                            "uid": user.uid,
-                            "createdAt": Timestamp()
-                        ]) { error in
-                            if let error = error {
-                                print("Error creating user: \(error.localizedDescription)")
-                            } else {
-                                print("User profile created successfully.")
-                            }
-                        }
-                    }
+                print("Firebase user signed in: \(user.email ?? "No Email")")
+                DispatchQueue.main.async {
+                    appState.isGoogleUser = true // Update isGoogleUser here
+                    print("isGoogleUser set to: \(appState.isGoogleUser)") // Debug log
                 }
+
+                self.checkFirestoreUser(user: user, appState: appState)
             }
         }
     }
 
 
+
+    private func checkFirestoreUser(user: User?, appState: AppState) {
+        guard let user = user else { return }
+        let db = Firestore.firestore()
+        let userDoc = db.collection("users").document(user.uid)
+
+        userDoc.getDocument { document, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Error checking user existence: \(error.localizedDescription)")
+                    appState.isGoogleUser = false
+                    appState.isFirstTimeUser = true
+                    appState.loggedIn = false
+                    return
+                }
+
+                if let document = document, document.exists {
+                    print("User already exists in Firestore: \(document.data() ?? [:])")
+                    appState.isGoogleUser = true
+                    appState.loggedIn = true
+                } else {
+                    print("First-time user. Creating profile...")
+                    appState.isGoogleUser = true
+                    appState.isFirstTimeUser = true
+                    appState.loggedIn = false
+
+                    userDoc.setData([
+                        "email": user.email ?? "",
+                        "displayName": user.displayName ?? "",
+                        "uid": user.uid,
+                        "createdAt": Timestamp()
+                    ]) { error in
+                        if let error = error {
+                            print("Error creating Firestore profile: \(error.localizedDescription)")
+                        } else {
+                            print("Firestore profile created successfully.")
+                        }
+                    }
+                }
+                print("isGoogleUser after Firestore check: \(appState.isGoogleUser)") // Debug log
+            }
+        }
+    }
 
 
 

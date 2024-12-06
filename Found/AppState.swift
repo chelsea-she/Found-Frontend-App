@@ -13,7 +13,16 @@ import Firebase
 class AppState: ObservableObject {
     @Published var currentUser: User?
     @Published var navigationPath = NavigationPath()
-    @Published var isFirstTimeUser: Bool = false
+    @Published var isFirstTimeUser: Bool = false {
+        didSet {
+                print("isFirstTimeUser updated to: \(isFirstTimeUser)")
+            }
+    }
+    @Published var isGoogleUser: Bool = false {
+        didSet {
+                print("isGoogleUser updated to: \(isGoogleUser)")
+            }
+    }
     @Published var loggedIn: Bool = false
     
     var isLoggedIn: Bool {
