@@ -6,8 +6,13 @@
 //
 import SwiftUI
 
-struct AppUser{
-    let id: String
+struct AppUserReturn:Codable{
+    var data: AppUser
+    var success: Bool
+}
+
+struct AppUser:Codable{
+    var id: Int
     var profileImage: String
     var username: String
     var bio: String
@@ -17,4 +22,5 @@ struct AppUser{
     var requests: [Post]
     var items: [Post]
     var timestamp: Date
+    var addedItems: [Post]
 }

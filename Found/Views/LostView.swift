@@ -10,7 +10,8 @@ import SwiftUI
 struct LostView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
     @EnvironmentObject var appState: AppState
-    
+    @Binding var user: AppUser?
+
     @State var category: String = ""
     @State var itemName: String = ""
     @State var selectedColors: [String] = []
@@ -27,6 +28,10 @@ struct LostView: View {
     @State private var formPost:Post = Post.dummyData
     @State var isLoading = false
     private var colorString: String = ""
+    
+    init(user: Binding<AppUser?>) {
+        _user = user
+    }
     
     var body: some View {
         VStack{

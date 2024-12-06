@@ -13,7 +13,7 @@ struct ProfileView: View {
     @State private var displayText: String = "Guest"
     @State private var isEditing: Bool = false
     @State private var newName: String = ""
-    
+    @Binding var user:AppUser?
     var body: some View {
         VStack(spacing: 20) {
             GeometryReader { geometry in

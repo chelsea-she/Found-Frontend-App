@@ -16,7 +16,8 @@ import SwiftUI
 struct FoundView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
     @EnvironmentObject var appState: AppState
-    
+    @Binding var user: AppUser?
+
     @State private var category: String = ""
     @State private var itemName: String = ""
     @State private var selectedColors: [String] = []
@@ -149,39 +150,39 @@ struct FoundView: View {
                         Button(action:{//TODO: push do networking here and push to a confirmation page
                             if(checkFormFinished()){
                                 isLoading = true
-                                updatePost()
-
-                                uploadImagesToFirebase(images: selectedImages) { result in
-                                    switch result {
-                                    case .success(let urls):
-                                        print("All images uploaded successfully!")
-                                        print("Uploaded URLs: \(urls)")
-                                        // You can save these URLs to Firestore or use them as needed
-                                        
-                                        var urlString = "['"
-                                        var firstTime = true
-                                        for url in urls {
-                                            if firstTime {
-                                                urlString += url
-                                                firstTime = false
-                                            } else {
-                                                urlString += "', '\(url)"
+                                if(updatePost()){
+                                    
+                                    uploadImagesToFirebase(images: selectedImages) { result in
+                                        switch result {
+                                        case .success(let urls):
+                                            print("All images uploaded successfully!")
+                                            print("Uploaded URLs: \(urls)")
+                                            // You can save these URLs to Firestore or use them as needed
+                                            
+                                            var urlString = "['"
+                                            var firstTime = true
+                                            for url in urls {
+                                                if firstTime {
+                                                    urlString += url
+                                                    firstTime = false
+                                                } else {
+                                                    urlString += "', '\(url)"
+                                                }
                                             }
+                                            urlString += "']"
+                                            formPost.image = urlString
+                                            
+                                            shouldNavigate = true
+                                            isLoading = false
+                                            
+                                        case .failure(let error):
+                                            print("Failed to upload images: \(error.localizedDescription)")
+                                            shouldNavigate = false
+                                            isLoading = false
+                                            
                                         }
-                                        urlString += "']"
-                                        formPost.image = urlString
-                                        
-                                        shouldNavigate = true
-                                        isLoading = false
-                                        
-                                    case .failure(let error):
-                                        print("Failed to upload images: \(error.localizedDescription)")
-                                        shouldNavigate = false
-                                        isLoading = false
-
                                     }
                                 }
-                                
                                 
                             }
                             else{
@@ -281,7 +282,7 @@ struct FoundView: View {
         return true
     }
     
-    func updatePost() {
+    func updatePost() -> Bool {
         var colorString = "['"
         var firstTime = true
         for color in selectedColors {
@@ -294,8 +295,12 @@ struct FoundView: View {
         }
         colorString += "']"
         
-        
-        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Date(), locationFound: location, dropLocation: drop, color: colorString, category: category, image: Post.dummyString, fulfilled: false, userId: 1)//MARK: change this
+        if let user = user{
+            formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Date(), locationFound: location, dropLocation: drop, color: colorString, category: category, image: Post.dummyString, fulfilled: false, userId: user.id)//MARK: change this
+            return true
+        } else{
+            return false
+        }
     }
     
     func uploadImagesToFirebase(images: [UIImage], completion: @escaping (Result<[String], Error>) -> Void) {

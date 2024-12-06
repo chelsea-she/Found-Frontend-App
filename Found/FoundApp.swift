@@ -18,6 +18,7 @@ struct FoundApp: App {
     @StateObject var appState: AppState = AppState()
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var authViewModel = AuthViewModel(appState: AppState())
+    @State var user: AppUser?
 
     
 //    init() {
@@ -29,7 +30,7 @@ struct FoundApp: App {
         WindowGroup {
             if appState.isFirstTimeUser {
                 if appState.isGoogleUser {
-                    GoogleSignupView(viewModel: authViewModel)
+                    GoogleSignupView(user: $user, viewModel: authViewModel)
                         .environmentObject(appState)
                 }
                 else {
@@ -40,20 +41,20 @@ struct FoundApp: App {
             else if appState.isLoggedIn {
                 NavigationStack(path: $appState.navigationPath) {
                     TabView {
-                        LostView()
+                        LostView(user: $user)
                             .tabItem {
                                 Label("Lost", systemImage: "questionmark.square.dashed")
                             }
-                        FoundView()
+                        FoundView(user:$user)
                             .tabItem {
                                 Label("Found", systemImage: "magnifyingglass")
                             }
                         
-                        ReceivedView()
+                        ReceivedView(user:$user)
                             .tabItem {
                                 Label("Received", systemImage: "checkmark.seal")
                             }
-                        ProfileView(viewModel: ProfileViewModel())
+                        ProfileView(viewModel: ProfileViewModel(), user:$user)
                             .tabItem {
                                 Label("Profile", systemImage: "person")
                             }
@@ -64,7 +65,7 @@ struct FoundApp: App {
                 }
             }
             else {
-                AuthView(viewModel: authViewModel)
+                AuthView(viewModel: authViewModel, user:$user)
                     .environmentObject(appState)
             }
             

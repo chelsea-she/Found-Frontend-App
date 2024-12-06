@@ -99,7 +99,7 @@ class NetworkManager {
             }
     }
     //MARK: create new user
-    func createNewUser(colors: String, category: String, userID: Int, location: String, name:String, description: String, completion: @escaping (Bool, [Post]) -> Void) {
+    func createNewUser(profileImage: String, username: String, bio: String, email: String, phone: String, licenseApprove: Bool, completion: @escaping (Bool, AppUser?) -> Void) {
         let jsonDecoder = JSONDecoder()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSZZZZZ"
@@ -107,15 +107,16 @@ class NetworkManager {
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         //parameters
         let parameters:Parameters = [
-            "item_name":name,
-            "category":category,
-            "color":colors,
-            "description": description,
-            "location_lost":location,
+            "profile_image":profileImage,
+            "username":username,
+            "bio":bio,
+            "email":email,
+            "phone":phone,
+            "license_approve":licenseApprove
         ]//MARK: change the endpoint
-        AF.request(endpoint+"/api/lost-request/\(userID)/", method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
+        AF.request(endpoint+"/api/users/", method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
             .validate(statusCode: 200..<300)
-            .responseDecodable(of: LostResponseData.self, decoder: jsonDecoder) {
+            .responseDecodable(of: AppUserReturn.self, decoder: jsonDecoder) {
                 response in
                 print(response)
                 if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
@@ -129,7 +130,7 @@ class NetworkManager {
                     completion(true, response.data)
                 case .failure(let error):
                     print("Error in NetworkManager.fetchLostPosts(): \(error)")
-                    completion(false,[])
+                    completion(false, nil)
                 }
             }
     }
