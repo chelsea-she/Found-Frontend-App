@@ -17,26 +17,29 @@ import GoogleSignInSwift
 struct AuthView: View {
     @ObservedObject var viewModel: AuthViewModel
     @EnvironmentObject var appState: AppState
-
+    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    
     var body: some View {
         NavigationStack {
             VStack {
                 Text("Found")
                     .font(.largeTitle)
                     .fontWeight(.medium)
-
+                
                 TextField("Email", text: $viewModel.emailText)
                     .padding()
                     .background(Color.gray.opacity(0.1))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-
+                
                 if viewModel.isPasswordVisible {
                     SecureField("Password", text: $viewModel.passwordText)
                         .padding()
                         .background(Color.gray.opacity(0.1))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
-
+                
                 Spacer().frame(height: 20)
                 if viewModel.isLoading {
                     ProgressView()
@@ -52,16 +55,16 @@ struct AuthView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     .alert(isPresented: $viewModel.showAlert) {
                         Alert(
-                            title: Text("Invalid Password"),
+                            title: Text("Error"),
                             message: Text(viewModel.alertMessage),
                             dismissButton: .default(Text("OK"))
                         )
                     }
                 }
-
+                
                 Spacer().frame(height: 20)
                 Button(action: {
-                    viewModel.signInWithGoogle(appState: appState)
+                    viewModel.signInWithGoogle(appState: appState, showAlert: $showAlert, alertMessage: $alertMessage)
                 }) {
                     HStack {
                         Image("google") // Add Google logo as an asset
@@ -74,15 +77,22 @@ struct AuthView: View {
                     .padding()
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(8)
+                    .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("Do you have a Cornell email?"),
+                            message: Text(alertMessage),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
+                }
+                .navigationDestination(isPresented: $appState.isFirstTimeUser) {
+                    SignupView(viewModel: viewModel)
+                }
+                .navigationDestination(isPresented: $appState.loggedIn) {
+                    LostView()
                 }
             }
-            .navigationDestination(isPresented: $appState.isFirstTimeUser) {
-                SignupView(viewModel: viewModel)
-            }
-            .navigationDestination(isPresented: $appState.loggedIn) {
-                LostView()
-            }
+            .padding()
         }
-        .padding()
     }
 }

@@ -8,6 +8,10 @@
 import SwiftUI
 import PhotosUI
 import PhoneNumberKit
+import Firebase
+import FirebaseStorage
+import SwiftUI
+
 
 struct FoundView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
@@ -41,7 +45,7 @@ struct FoundView: View {
         VStack(spacing: 0) {
             
             FoundTabButtonView(selectedTab: $selectedTab)
-        
+
             ZStack{
                 if selectedTab == 0 {
                     TabItemView(title: "Found something?", content: {
@@ -102,7 +106,7 @@ struct FoundView: View {
                         DropSectionFound(drop: $drop)//MARK: make a location selcetor in the future
                         //MARK: future make a more detailed location descirption
                         DescriptionSectionFound(description: $description)
-
+                        
                         Spacer()
                         HStack {
                             Button(action: {
@@ -139,6 +143,20 @@ struct FoundView: View {
                             if(checkFormFinished()){
                                 updatePost()
                                 shouldNavigate = true
+                                uploadImagesToFirebase(images: selectedImages) { result in
+                                    switch result {
+                                    case .success(let urls):
+                                        print("All images uploaded successfully!")
+                                        print("Uploaded URLs: \(urls)")
+                                        // You can save these URLs to Firestore or use them as needed
+                                    case .failure(let error):
+                                        print("Failed to upload images: \(error.localizedDescription)")
+                                    }
+                                }
+                                
+                            }
+                            else{
+                                showIncompleteAlert.toggle()
                             }
                             else{
                                 showIncompleteAlert.toggle()
@@ -152,7 +170,7 @@ struct FoundView: View {
                                 .cornerRadius(10)
                         }
                         .alert("Stop!", isPresented: $showIncompleteAlert, actions: {
-   
+
                         }, message: {
                             Text("Please fill out all form fields!")
                         })
@@ -205,7 +223,7 @@ struct FoundView: View {
                                         shouldNavigate = false
                                         phoneNumberValid = false
                                         showResetAlert = false
-
+                                        
                                         formPost = Post.dummyData //MARK: change this later
                                         
                                     },
@@ -237,9 +255,52 @@ struct FoundView: View {
     }
     
     func updatePost() {
-        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Post.dummyString, locationFound: location, dropLocation: drop, color: selectedColors, category: category, image:"url", fulfilled: false, userID: 1)//MARK: change this
+        
+        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Post.dummyString, locationFound: location, dropLocation: drop, color: selectedColors, category: category, image: [], fulfilled: false, userID: 1)//MARK: change this
     }
-
+    
+    func uploadImagesToFirebase(images: [UIImage], completion: @escaping (Result<[String], Error>) -> Void) {
+        var uploadedURLs: [String] = []
+        let group = DispatchGroup() // To track completion of all uploads
+        
+        for image in images {
+            group.enter() // Enter the group for each image
+            
+            // Convert UIImage to Data
+            guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+                print("Failed to convert image to data")
+                group.leave()
+                continue
+            }
+            // Get a reference to Firebase Storage
+            let storageRef = Storage.storage().reference()
+            
+            // Create a unique file name for the image
+            let fileName = UUID().uuidString
+            let imageRef = storageRef.child("images/\(fileName).jpg")
+            
+            // Upload the image to Firebase Storage
+            imageRef.putData(imageData, metadata: nil) { metadata, error in
+                if let error = error {
+                    print("Error uploading image: \(error.localizedDescription)")
+                    group.leave()
+                } else {
+                    // Get the download URL
+                    imageRef.downloadURL { url, error in
+                        if let error = error {
+                            print("Error getting download URL: \(error.localizedDescription)")
+                        } else if let downloadURL = url {
+                            print("Uploaded image URL: \(downloadURL.absoluteString)")
+                            uploadedURLs.append(downloadURL.absoluteString)
+                        }
+                        group.leave()
+                    }
+                }
+            }
+        }
+        
+        
+    }
 }
 
 //MARK: layout helper
@@ -372,7 +433,7 @@ struct CategorySectionFound: View {
 struct ColorSectionFound: View {
     @Binding var selectedColors: [String]
     @State private var colorOptions: [ColorOption] = Categories.init().colorOptions
-
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text("Color")
@@ -409,7 +470,7 @@ struct ColorSectionFound: View {
                         .padding(3)
                         .background(colorOptions[colorOptions.firstIndex(where: { $0.name == selectedColor })!].color.opacity(0.7))
                         .cornerRadius(8)
-                        
+                    
                 }
             }
         }
@@ -532,7 +593,7 @@ struct PhoneNumberSectionFound: View {
                 .onChange(of: phoneNumber){
                     newValue in phoneNumberValid = validatePhoneNumber(newValue)
                 }
-                
+            
         }
     }
     
@@ -554,13 +615,13 @@ struct DatePickerPopupFound: View {
     
     let startDate = Calendar.current.date(byAdding: .day, value: -10, to: Date())! // 5 days ago
     let endDate = Calendar.current.date(byAdding: .day, value: 0, to: Date())! // 5 days in the future
-
+    
     var body: some View {
         VStack {
             Text("Select Date and Time")
                 .font(.headline)
                 .padding()
-
+            
             DatePicker(
                 "Select Date and Time",
                 selection: $selectedDate,
@@ -570,7 +631,7 @@ struct DatePickerPopupFound: View {
             .datePickerStyle(WheelDatePickerStyle())
             .labelsHidden()
             .padding()
-
+            
             Button(action: {
                 dismiss() // Dismiss the popup
             }) {
@@ -647,36 +708,36 @@ struct ImagePickerFound: View {
 
 struct PhotoPickerFound: UIViewControllerRepresentable {
     @Binding var selectedImages: [UIImage]
-
+    
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
         config.filter = .images
         config.selectionLimit = 3
-
+        
         let picker = PHPickerViewController(configuration: config)
         picker.delegate = context.coordinator
         return picker
     }
-
+    
     func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
-
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-
+    
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
         let parent: PhotoPickerFound
-
+        
         init(_ parent: PhotoPickerFound) {
             self.parent = parent
         }
-
+        
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated: true)
-
+            
             let group = DispatchGroup()
             var images: [UIImage] = []
-
+            
             for result in results {
                 let provider = result.itemProvider
                 if provider.canLoadObject(ofClass: UIImage.self) {
@@ -689,7 +750,7 @@ struct PhotoPickerFound: UIViewControllerRepresentable {
                     }
                 }
             }
-
+            
             group.notify(queue: .main) {
                 self.parent.selectedImages = images
             }

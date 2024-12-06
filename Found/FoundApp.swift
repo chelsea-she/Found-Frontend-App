@@ -20,15 +20,22 @@ struct FoundApp: App {
     @StateObject var authViewModel = AuthViewModel(appState: AppState())
 
     
-    //    init() {
-    //        configureFirebase()
-    //    }
+//    init() {
+//            let appState = AppState()
+//            self._authViewModel = StateObject(wrappedValue: AuthViewModel(appState: appState))
+//    }
     
     var body: some Scene {
         WindowGroup {
             if appState.isFirstTimeUser {
-                SignupView(viewModel: authViewModel)
-                    .environmentObject(appState)
+                if appState.isGoogleUser {
+                    GoogleSignupView(viewModel: authViewModel)
+                        .environmentObject(appState)
+                }
+                else {
+                    SignupView(viewModel: authViewModel)
+                        .environmentObject(appState)
+                }
             }
             else if appState.isLoggedIn {
                 NavigationStack(path: $appState.navigationPath) {

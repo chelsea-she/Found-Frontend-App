@@ -9,6 +9,7 @@ import Foundation
 import FirebaseAuth
 import GoogleSignIn
 import Firebase
+import SwiftUI
 
 class AuthViewModel: ObservableObject {
     @Published var emailText: String = ""
@@ -32,6 +33,15 @@ class AuthViewModel: ObservableObject {
         isLoading = true
         Task {
             do {
+                if !emailText.hasSuffix("@cornell.edu") {
+                    await MainActor.run {
+                        alertMessage = "You must use a Cornell University email address."
+                        showAlert = true
+                        isLoading = false
+                    }
+                    return
+                }
+                
                 if isPasswordVisible {
                     let loginResult = try await authService.login(email: emailText, password: passwordText, userExists: userExists)
                     let _ = try await authService.createUserFirestore(email: emailText)
@@ -49,6 +59,7 @@ class AuthViewModel: ObservableObject {
                         isPasswordVisible = true
                         isLoading = false // Reset loading state after operation
                         if !userExists {
+                            appState.loggedIn = false
                             appState.isFirstTimeUser = true
                         }
                     }
@@ -76,7 +87,7 @@ class AuthViewModel: ObservableObject {
         }
     }
 
-    func signInWithGoogle(appState: AppState) {
+    func signInWithGoogle(appState: AppState, showAlert: Binding<Bool>, alertMessage: Binding<String>) {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             print("Missing clientID")
             return
@@ -93,70 +104,106 @@ class AuthViewModel: ObservableObject {
         GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { result, error in
             if let error = error {
                 print("Google Sign-In Error: \(error.localizedDescription)")
-                return
-            }
-
-            guard let user = result?.user, let idToken = user.idToken else {
-                print("Failed to retrieve user or token")
-                return
-            }
-
-            let credential = GoogleAuthProvider.credential(
-                withIDToken: idToken.tokenString,
-                accessToken: user.accessToken.tokenString
-            )
-
-            Auth.auth().signIn(with: credential) { authResult, error in
-                if let error = error {
-                    print("Firebase Sign-In Error: \(error.localizedDescription)")
-                    return
+                DispatchQueue.main.async {
+                    appState.isGoogleUser = false
+                    appState.isFirstTimeUser = true
+                    appState.loggedIn = false
                 }
+                return
+            }
 
-                guard let user = authResult?.user else { return }
+            guard let user = result?.user, let email = user.profile?.email else {
+                print("Failed to retrieve user or email")
+                DispatchQueue.main.async {
+                    appState.isGoogleUser = false
+                    appState.isFirstTimeUser = true
+                    appState.loggedIn = false
+                }
+                return
+            }
 
-                print("User signed in: \(user.email ?? "No Email")")
+            // Check if the email domain is @cornell.edu
+            if email.hasSuffix("@cornell.edu") {
+                let credential = GoogleAuthProvider.credential(
+                    withIDToken: user.idToken!.tokenString,
+                    accessToken: user.accessToken.tokenString
+                )
 
-                // Check Firestore for user existence
-                let db = Firestore.firestore()
-                let userDoc = db.collection("users").document(user.uid)
-
-                userDoc.getDocument { document, error in
+                Auth.auth().signIn(with: credential) { authResult, error in
                     if let error = error {
-                        print("Error checking user existence: \(error.localizedDescription)")
+                        print("Firebase Sign-In Error: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            appState.isGoogleUser = false
+                            appState.loggedIn = false
+                        }
                         return
                     }
 
-                    if let document = document, document.exists {
-                        print("User already exists: \(document.data() ?? [:])")
-                        DispatchQueue.main.async {
-                            appState.loggedIn = true
-                        }
-                    } else {
-                        // First-time user
-                        print("First-time user. Creating profile...")
-                        DispatchQueue.main.async {
-                            appState.isFirstTimeUser = true
-                        }
+                    guard let user = authResult?.user else { return }
 
-                        userDoc.setData([
-                            "email": user.email ?? "",
-                            "displayName": user.displayName ?? "",
-                            "uid": user.uid,
-                            "createdAt": Timestamp()
-                        ]) { error in
-                            if let error = error {
-                                print("Error creating user: \(error.localizedDescription)")
-                            } else {
-                                print("User profile created successfully.")
-                            }
-                        }
+                    print("Firebase user signed in: \(user.email ?? "No Email")")
+                    DispatchQueue.main.async {
+                        appState.isGoogleUser = true
+                        appState.loggedIn = true
                     }
+
+                    self.checkFirestoreUser(user: user, appState: appState)
+                }
+            } else {
+                // Show alert for non-Cornell email
+                DispatchQueue.main.async {
+                    alertMessage.wrappedValue = "Please sign in with a Cornell University email address."
+                    showAlert.wrappedValue = true
                 }
             }
         }
     }
 
 
+
+
+    private func checkFirestoreUser(user: User?, appState: AppState) {
+        guard let user = user else { return }
+        let db = Firestore.firestore()
+        let userDoc = db.collection("users").document(user.uid)
+
+        userDoc.getDocument { document, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Error checking user existence: \(error.localizedDescription)")
+                    appState.isGoogleUser = false
+                    appState.isFirstTimeUser = true
+                    appState.loggedIn = false
+                    return
+                }
+
+                if let document = document, document.exists {
+                    print("User already exists in Firestore: \(document.data() ?? [:])")
+                    appState.isGoogleUser = true
+                    appState.loggedIn = true
+                } else {
+                    print("First-time user. Creating profile...")
+                    appState.isGoogleUser = true
+                    appState.isFirstTimeUser = true
+                    appState.loggedIn = false
+
+                    userDoc.setData([
+                        "email": user.email ?? "",
+                        "displayName": user.displayName ?? "",
+                        "uid": user.uid,
+                        "createdAt": Timestamp()
+                    ]) { error in
+                        if let error = error {
+                            print("Error creating Firestore profile: \(error.localizedDescription)")
+                        } else {
+                            print("Firestore profile created successfully.")
+                        }
+                    }
+                }
+                print("isGoogleUser after Firestore check: \(appState.isGoogleUser)") // Debug log
+            }
+        }
+    }
 
 
 
