@@ -20,6 +20,13 @@ class ViewLostQueries: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func configure(success: Bool, posts: [Post]){
+        self.posts = posts
+        self.success = success
+        viewDidLoad()
+        //MARK: update whatever you need to in here after view is loaded, basically treat like an init?
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

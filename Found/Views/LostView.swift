@@ -368,23 +368,28 @@ struct UIKitViewControllerWrapperLost: UIViewControllerRepresentable {
     var description: String
     var location: String
     @Binding var isLoading: Bool
+    
+    @State private var successful: Bool = false
+    @State private var retPosts: [Post] = []
+    
     func makeUIViewController(context: Context) -> ViewLostQueries {
-        //TODO: do networking here, if successful, return, push a collectionview page. this is currently set to push to a test page
-        var successful = false
-        var retPosts:[Post]=[]
-        NetworkManager.shared.fetchLostPosts(colors: color, category: category, userID: 1, location: location, name:name, description: description){
-            success, posts in
-            print("success")
-            successful = success
-            retPosts=posts
-        }
-        isLoading = false
-        return ViewLostQueries(success: successful, posts: retPosts)
+        let placeholderPage = ViewLostQueries(success: false, posts: [])
         
+        isLoading = true
+        
+        NetworkManager.shared.fetchLostPosts(colors: color, category: category, userID: 1, location: location, name: name, description: description) { success, posts in
+            successful = success
+            retPosts = posts
+            isLoading = false
+        }
+        
+        return placeholderPage
     }
     
     func updateUIViewController(_ uiViewController: ViewLostQueries, context: Context) {
-        // No updates needed for this example
+        if !isLoading {
+            uiViewController.configure(success: successful, posts: retPosts)
+        }
     }
 }
 //#Preview {

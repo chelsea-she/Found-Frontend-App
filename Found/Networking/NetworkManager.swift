@@ -15,22 +15,33 @@ class NetworkManager {
 
     private let endpoint = "http://34.145.244.103"//MARK: change this
 
+    //MARK: upload lost post - needs testing
     func fetchLostPosts(colors: String, category: String, userID: Int, location: String, name:String, description: String, completion: @escaping (Bool, [Post]) -> Void) {
         let jsonDecoder = JSONDecoder()
-        jsonDecoder.dateDecodingStrategy = .iso8601
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSZZZZZ"
+        jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         //parameters
         let parameters:Parameters = [
-            "itemName":name,
+            "item_name":name,
             "category":category,
             "color":colors,
             "description": description,
-            "locationLost":location,
+            "location_lost":location,
         ]//MARK: change the endpoint
         AF.request(endpoint+"/api/lost-request/\(userID)/", method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
-            .validate()
+            .validate(statusCode: 200..<300)
             .responseDecodable(of: LostResponseData.self, decoder: jsonDecoder) {
-                response in switch response.result {
+                response in
+                print(response)
+                if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
+                    print("Raw Response JSON: \(jsonString)")
+                } else {
+                    print("No response body or data was empty.")
+                }
+                
+                switch response.result {
                 case .success(let response):
                     completion(true, response.data)
                 case .failure(let error):
@@ -40,6 +51,7 @@ class NetworkManager {
             }
     }
 
+    //MARK: upload foudn post
     func uploadFoundPost(post: Post, userID: Int, completion: @escaping (Bool) -> Void){
         let jsonDecoder = JSONDecoder()
         let dateFormatter = DateFormatter()
@@ -86,6 +98,40 @@ class NetworkManager {
                 }
             }
     }
-
+    //MARK: create new user
+    func createNewUser(colors: String, category: String, userID: Int, location: String, name:String, description: String, completion: @escaping (Bool, [Post]) -> Void) {
+        let jsonDecoder = JSONDecoder()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSZZZZZ"
+        jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        //parameters
+        let parameters:Parameters = [
+            "item_name":name,
+            "category":category,
+            "color":colors,
+            "description": description,
+            "location_lost":location,
+        ]//MARK: change the endpoint
+        AF.request(endpoint+"/api/lost-request/\(userID)/", method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
+            .validate(statusCode: 200..<300)
+            .responseDecodable(of: LostResponseData.self, decoder: jsonDecoder) {
+                response in
+                print(response)
+                if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
+                    print("Raw Response JSON: \(jsonString)")
+                } else {
+                    print("No response body or data was empty.")
+                }
+                
+                switch response.result {
+                case .success(let response):
+                    completion(true, response.data)
+                case .failure(let error):
+                    print("Error in NetworkManager.fetchLostPosts(): \(error)")
+                    completion(false,[])
+                }
+            }
+    }
 
 }
