@@ -52,7 +52,7 @@ class NetworkManager {
     }
 
     //MARK: upload foudn post
-    func uploadFoundPost(post: Post, userID: Int, completion: @escaping (Bool) -> Void){
+    func uploadFoundPost(post: Post, completion: @escaping (Bool) -> Void){
         let jsonDecoder = JSONDecoder()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSZZZZZ"
@@ -71,7 +71,7 @@ class NetworkManager {
         ]
         
         print(parameters)
-        let urlString = "\(endpoint)/api/users/\(String(userID))/items/"
+        let urlString = "\(endpoint)/api/users/\(String(post.id))/items/"
         print(urlString)
         AF.request(urlString, method: .post, parameters: parameters, encoding: JSONEncoding.default)//MARK: change the endpoint
             .validate(statusCode: 200..<300)

@@ -709,7 +709,7 @@ struct UIKitViewControllerWrapperFound: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> FoundPushSuccessPage {
         let placeholderPage = FoundPushSuccessPage(isLoading: true, success: false, post: post)
         
-        NetworkManager.shared.uploadFoundPost(post: post, userID: 1) { success in
+        NetworkManager.shared.uploadFoundPost(post: post) { success in
             successful = success
             isLoading = false
         }
