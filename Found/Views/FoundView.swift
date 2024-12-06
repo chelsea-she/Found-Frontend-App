@@ -38,7 +38,7 @@ struct FoundView: View {
     @State private var showIncompleteAlert = false
 
     @State private var formPost: Post = Post.dummyData //MARK: change this later
-    
+    @State private var isLoading: Bool = false
     
     //MARK: main body
     var body: some View {
@@ -137,29 +137,56 @@ struct FoundView: View {
                         EmailSectionFound(email: $email)
                         PhoneNumberSectionFound(phoneNumber: $phoneNumber, phoneNumberValid: $phoneNumberValid)
                         Spacer()
-                        
-                        
+                        HStack{
+                            Spacer()
+                            if isLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle())
+                                    .padding()
+                            }
+                            Spacer()
+                        }
                         Button(action:{//TODO: push do networking here and push to a confirmation page
                             if(checkFormFinished()){
+                                isLoading = true
                                 updatePost()
-                                shouldNavigate = true
+
                                 uploadImagesToFirebase(images: selectedImages) { result in
                                     switch result {
                                     case .success(let urls):
                                         print("All images uploaded successfully!")
                                         print("Uploaded URLs: \(urls)")
                                         // You can save these URLs to Firestore or use them as needed
+                                        
+                                        var urlString = "['"
+                                        var firstTime = true
+                                        for url in urls {
+                                            if firstTime {
+                                                urlString += url
+                                                firstTime = false
+                                            } else {
+                                                urlString += "', '\(url)"
+                                            }
+                                        }
+                                        urlString += "']"
+                                        formPost.image = urlString
+                                        
+                                        shouldNavigate = true
+                                        isLoading = false
+                                        
                                     case .failure(let error):
                                         print("Failed to upload images: \(error.localizedDescription)")
+                                        shouldNavigate = false
+                                        isLoading = false
+
                                     }
                                 }
+                                
                                 
                             }
                             else{
                                 showIncompleteAlert.toggle()
-                            }
-                            else{
-                                showIncompleteAlert.toggle()
+                                shouldNavigate = false
                             }
                         }) {
                             Text("Submit!")
@@ -255,8 +282,20 @@ struct FoundView: View {
     }
     
     func updatePost() {
+        var colorString = "['"
+        var firstTime = true
+        for color in selectedColors {
+            if firstTime {
+                colorString += color
+                firstTime = false
+            } else {
+                colorString += "', '\(color)"
+            }
+        }
+        colorString += "']"
         
-        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Post.dummyString, locationFound: location, dropLocation: drop, color: selectedColors, category: category, image: [], fulfilled: false, userID: 1)//MARK: change this
+        
+        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Date(), locationFound: location, dropLocation: drop, color: colorString, category: category, image: Post.dummyString, fulfilled: false, userID: 1)//MARK: change this
     }
     
     func uploadImagesToFirebase(images: [UIImage], completion: @escaping (Result<[String], Error>) -> Void) {
@@ -299,6 +338,14 @@ struct FoundView: View {
             }
         }
         
+        group.notify(queue: .main) {
+            if uploadedURLs.count == images.count {
+                completion(.success(uploadedURLs))
+            } else {
+                let error = NSError(domain: "ImageUpload", code: -1, userInfo: [NSLocalizedDescriptionKey: "Some images failed to upload."])
+                completion(.failure(error))
+            }
+        }
         
     }
 }
@@ -651,14 +698,21 @@ struct DatePickerPopupFound: View {
 //MARK: wrapper
 struct UIKitViewControllerWrapperFound: UIViewControllerRepresentable {
     @Binding var post: Post
-    func makeUIViewController(context: Context) -> MyUIKitViewController {
+    func makeUIViewController(context: Context) -> FoundPushSuccessPage {
         //TODO: do networking here, if successful, return, else return a failed page or just don't return a page?
         //TODO: should we have a review and submit page?
         //TODO: this is currently set to push to a test page
-        return MyUIKitViewController(post: post)
+        var successful = false
+        NetworkManager.shared.uploadFoundPost(post: post, userID: 1){
+            success in
+            print("success")
+            successful = success
+        }
+        return FoundPushSuccessPage(success: successful, post: post)
+
     }
     
-    func updateUIViewController(_ uiViewController: MyUIKitViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: FoundPushSuccessPage, context: Context) {
         // No updates needed for this example
     }
 }

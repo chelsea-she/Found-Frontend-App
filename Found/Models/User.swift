@@ -4,13 +4,17 @@
 //
 //  Created by Ryan Ye on 11/24/24.
 //
+import SwiftUI
 
-struct User1{
+struct AppUser{
     let id: String
-    var displayName: String
-    var bio: String
     var profileImage: String
+    var username: String
+    var bio: String
     var email: String
     var phone: String
-    var isVerified: Bool
+    var licenseApprove: Bool
+    var requests: [Post]
+    var items: [Post]
+    var timestamp: Date
 }

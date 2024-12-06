@@ -32,7 +32,7 @@ class NetworkManager {
             .responseDecodable(of: LostResponseData.self, decoder: jsonDecoder) {
                 response in switch response.result {
                 case .success(let response):
-                    completion(response.posts)
+                    completion(response.data)
                 case .failure(let error):
                     print("Error in NetworkManager.fetchLostPosts(): \(error)")
                 }
@@ -54,19 +54,23 @@ class NetworkManager {
             "image":post.image,
             "fulfilled":post.fulfilled,
         ]
+        
+        print(parameters)
+        
         AF.request(endpoint, method: .post, parameters: parameters)//MARK: change the endpoint
             .validate()
             .responseDecodable(of:FoundResponseData.self, decoder: jsonDecoder)
             {
                 response in
                 //handle response
-                //print(response)
+                print(response)
                 switch response.result {
                 case .success(let response):
-                    print("Successfully uploaded post: \(response.post)")
+                    print("Successfully uploaded post: \(response.data)")
                     completion(true)
                 case .failure(let error):
                     print("Error in NetworkManager.uploadPost: \(error.localizedDescription)")
+                    
                     completion(false)
                 }
             }

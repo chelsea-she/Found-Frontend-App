@@ -7,11 +7,13 @@
 
 import UIKit
 
-class MyUIKitViewController: UIViewController {
+class FoundPushSuccessPage: UIViewController {
     private var post:Post
+    private var success:Bool
     
-    init(post:Post){
+    init(success: Bool, post:Post){
         self.post = post
+        self.success = success
         super.init(nibName: nil, bundle: nil)
     }
     required init?(coder: NSCoder) {
@@ -20,19 +22,36 @@ class MyUIKitViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBlue
         
-        let label = UILabel()
-        label.text = post.itemName
-        label.textColor = .white
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(label)
-        
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
+        if(success){
+            view.backgroundColor = .systemBackground
+            let label = UILabel()
+            label.text = post.itemName
+            label.textColor = .black
+            label.textAlignment = .center
+            label.translatesAutoresizingMaskIntoConstraints = false
+            
+            view.addSubview(label)
+            
+            NSLayoutConstraint.activate([
+                label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        }
+        else{
+            view.backgroundColor = .systemRed
+            let label = UILabel()
+            label.text = "Unsuccessful, try again"
+            label.textColor = .white
+            label.textAlignment = .center
+            label.translatesAutoresizingMaskIntoConstraints = false
+            
+            view.addSubview(label)
+            
+            NSLayoutConstraint.activate([
+                label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        }
     }
 }

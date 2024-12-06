@@ -335,12 +335,12 @@ struct DatePickerPopupLost: View {
 }
 //MARK: wrapper
 struct UIKitViewControllerWrapperLost: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> MyUIKitViewController {
+    func makeUIViewController(context: Context) -> FoundPushSuccessPage {
         //TODO: do networking here, if successful, return, push a collectionview page. this is currently set to push to a test page
-        return MyUIKitViewController(post:Post.dummyData)
+        return FoundPushSuccessPage(success: false, post:Post.dummyData)
     }
     
-    func updateUIViewController(_ uiViewController: MyUIKitViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: FoundPushSuccessPage, context: Context) {
         // No updates needed for this example
     }
 }
