@@ -237,7 +237,8 @@ struct FoundView: View {
     }
     
     func updatePost() {
-        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Post.dummyString, locationFound: location, dropLocation: drop, color: selectedColors, category: category, image:"url", fulfilled: false, userID: 1)//MARK: change this
+        
+        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Post.dummyString, locationFound: location, dropLocation: drop, color: selectedColors, category: category, image:[], fulfilled: false, userID: 1)//MARK: change this
     }
 
 }
