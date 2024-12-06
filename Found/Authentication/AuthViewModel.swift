@@ -9,6 +9,7 @@ import Foundation
 import FirebaseAuth
 import GoogleSignIn
 import Firebase
+import SwiftUI
 
 class AuthViewModel: ObservableObject {
     @Published var emailText: String = ""
@@ -32,6 +33,15 @@ class AuthViewModel: ObservableObject {
         isLoading = true
         Task {
             do {
+                if !emailText.hasSuffix("@cornell.edu") {
+                    await MainActor.run {
+                        alertMessage = "You must use a Cornell University email address."
+                        showAlert = true
+                        isLoading = false
+                    }
+                    return
+                }
+                
                 if isPasswordVisible {
                     let loginResult = try await authService.login(email: emailText, password: passwordText, userExists: userExists)
                     let _ = try await authService.createUserFirestore(email: emailText)
@@ -77,7 +87,7 @@ class AuthViewModel: ObservableObject {
         }
     }
 
-    func signInWithGoogle(appState: AppState) {
+    func signInWithGoogle(appState: AppState, showAlert: Binding<Bool>, alertMessage: Binding<String>) {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             print("Missing clientID")
             return
@@ -102,8 +112,8 @@ class AuthViewModel: ObservableObject {
                 return
             }
 
-            guard let user = result?.user, let idToken = user.idToken else {
-                print("Failed to retrieve user or token")
+            guard let user = result?.user, let email = user.profile?.email else {
+                print("Failed to retrieve user or email")
                 DispatchQueue.main.async {
                     appState.isGoogleUser = false
                     appState.isFirstTimeUser = true
@@ -112,33 +122,43 @@ class AuthViewModel: ObservableObject {
                 return
             }
 
-            let credential = GoogleAuthProvider.credential(
-                withIDToken: idToken.tokenString,
-                accessToken: user.accessToken.tokenString
-            )
+            // Check if the email domain is @cornell.edu
+            if email.hasSuffix("@cornell.edu") {
+                let credential = GoogleAuthProvider.credential(
+                    withIDToken: user.idToken!.tokenString,
+                    accessToken: user.accessToken.tokenString
+                )
 
-            Auth.auth().signIn(with: credential) { authResult, error in
-                if let error = error {
-                    print("Firebase Sign-In Error: \(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        appState.isGoogleUser = false
-                        appState.loggedIn = false
+                Auth.auth().signIn(with: credential) { authResult, error in
+                    if let error = error {
+                        print("Firebase Sign-In Error: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            appState.isGoogleUser = false
+                            appState.loggedIn = false
+                        }
+                        return
                     }
-                    return
+
+                    guard let user = authResult?.user else { return }
+
+                    print("Firebase user signed in: \(user.email ?? "No Email")")
+                    DispatchQueue.main.async {
+                        appState.isGoogleUser = true
+                        appState.loggedIn = true
+                    }
+
+                    self.checkFirestoreUser(user: user, appState: appState)
                 }
-
-                guard let user = authResult?.user else { return }
-
-                print("Firebase user signed in: \(user.email ?? "No Email")")
+            } else {
+                // Show alert for non-Cornell email
                 DispatchQueue.main.async {
-                    appState.isGoogleUser = true // Update isGoogleUser here
-                    print("isGoogleUser set to: \(appState.isGoogleUser)") // Debug log
+                    alertMessage.wrappedValue = "Please sign in with a Cornell University email address."
+                    showAlert.wrappedValue = true
                 }
-
-                self.checkFirestoreUser(user: user, appState: appState)
             }
         }
     }
+
 
 
 
