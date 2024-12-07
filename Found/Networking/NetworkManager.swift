@@ -149,7 +149,7 @@ class NetworkManager {
             "bio": bio,
             "phone": phone
         ]//MARK: change the endpoint
-        AF.request(endpoint+"/api/users/\(user.id)", method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
+        AF.request(endpoint+"/api/users/\(user.id)/", method: .post, parameters: parameters, encoding: JSONEncoding.default) //change these
             .validate(statusCode: 200..<300)
             .responseDecodable(of: AppUserReturn.self, decoder: jsonDecoder) {
                 response in

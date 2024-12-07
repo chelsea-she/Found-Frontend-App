@@ -156,6 +156,7 @@ struct ProfileView: View {
                     Spacer()
                     
                     Button("Save") {
+                        print(user)
                         user.username = newName // Save new name
                         user.bio = newBio // Save new bio
                         user.phone = newPhoneNumber // Save new phone number
@@ -164,6 +165,7 @@ struct ProfileView: View {
                             success, result in
                             
                         }
+                        print(user)
                     }
                     .font(.body)
                     .foregroundColor(.blue)
