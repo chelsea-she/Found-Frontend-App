@@ -10,7 +10,7 @@ import SwiftUI
 struct LostView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
     @EnvironmentObject var appState: AppState
-    @Binding var user: AppUser
+    var user: AppUser
 
     @State var category: String = ""
     @State var itemName: String = ""
@@ -29,8 +29,8 @@ struct LostView: View {
     @State var isLoading = false
     private var colorString: String = ""
     
-    init(user: Binding<AppUser>) {
-        _user = user
+    init(user: AppUser) {
+        self.user = user
     }
     
     var body: some View {

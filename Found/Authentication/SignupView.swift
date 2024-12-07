@@ -89,9 +89,9 @@ struct SignupView: View {
                 appState.isFirstTimeUser = false
                 appState.loggedIn = true
                 viewModel.authenticate(appState: appState)
-                if let newUser{
-                    user = newUser
-                }
+                user = newUser!
+                print("si view \(user)")
+
             }
         }
     }

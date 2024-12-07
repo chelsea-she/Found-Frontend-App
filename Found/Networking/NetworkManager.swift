@@ -71,7 +71,7 @@ class NetworkManager {
         ]
         
         print(parameters)
-        let urlString = "\(endpoint)/api/users/\(String(post.id))/items/"
+        let urlString = "\(endpoint)/api/users/\(String(post.userId))/items/"
         print(urlString)
         AF.request(urlString, method: .post, parameters: parameters, encoding: JSONEncoding.default)//MARK: change the endpoint
             .validate(statusCode: 200..<300)

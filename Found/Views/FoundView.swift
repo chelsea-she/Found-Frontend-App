@@ -16,7 +16,7 @@ import SwiftUI
 struct FoundView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
     @EnvironmentObject var appState: AppState
-    @Binding var user: AppUser
+    var user: AppUser
 
     @State private var category: String = ""
     @State private var itemName: String = ""
@@ -294,6 +294,7 @@ struct FoundView: View {
         }
         colorString += "']"
         
+        print("userinfound \(user)")
         
         formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Date(), locationFound: location, dropLocation: drop, color: colorString, category: category, image: Post.dummyString, fulfilled: false, userId: user.id)//MARK: change this
     

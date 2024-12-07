@@ -89,7 +89,7 @@ struct AuthView: View {
                     SignupView(user:$user, viewModel: viewModel)
                 }
                 .navigationDestination(isPresented: $appState.loggedIn) {
-                    LostView(user:$user)
+                    LostView(user:user)
                 }
             }
             .padding()
