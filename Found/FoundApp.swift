@@ -41,19 +41,18 @@ struct FoundApp: App {
             else if appState.isLoggedIn {
                 NavigationStack(path: $appState.navigationPath) {
                     TabView {
-                        LostView(user: user)
+                        LostView(user: $user)
                             .tabItem {
                                 Label("Lost", systemImage: "questionmark.square.dashed")
                             }
-                        FoundView(user:user)
+                        FoundView(user:$user)
                             .tabItem {
                                 Label("Found", systemImage: "magnifyingglass")
                             }
-                        
-                        ReceivedView(user:user)
-                            .tabItem {
-                                Label("Received", systemImage: "checkmark.seal")
-                            }
+//                        ReceivedView(user:$user)
+//                            .tabItem {
+//                                Label("Received", systemImage: "checkmark.seal")
+//                            }
                         ProfileView(viewModel: ProfileViewModel(), user:$user)
                             .tabItem {
                                 Label("Profile", systemImage: "person")

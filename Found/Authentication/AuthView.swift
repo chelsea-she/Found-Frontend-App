@@ -3,10 +3,7 @@
 //  Lost and Found
 //
 //  Created by Chelsea She on 11/23/24.
-//TODO: add google sign in
-//    https://www.youtube.com/watch?v=vZEUAIHrsg8
-//   https://github.com/sheehanmunim/GoogleSignInFirebaseSwiftUI
-//
+
 
 import SwiftUI
 import FirebaseAuth
@@ -65,6 +62,7 @@ struct AuthView: View {
                 Spacer().frame(height: 20)
                 Button(action: {
                     viewModel.signInWithGoogle(appState: appState, showAlert: $showAlert, alertMessage: $alertMessage)
+                    
                 }) {
                     HStack {
                         Image("google") // Add Google logo as an asset
@@ -89,7 +87,7 @@ struct AuthView: View {
                     SignupView(user:$user, viewModel: viewModel)
                 }
                 .navigationDestination(isPresented: $appState.loggedIn) {
-                    LostView(user:user)
+                    LostView(user:$user)
                 }
             }
             .padding()

@@ -20,7 +20,7 @@ class AuthViewModel: ObservableObject {
     @Published var userExists = false
     @Published var showAlert = false
     @Published var alertMessage = ""
-    
+
     private let appState: AppState
     
     init(appState: AppState) {
@@ -148,6 +148,8 @@ class AuthViewModel: ObservableObject {
                     }
 
                     self.checkFirestoreUser(user: user, appState: appState)
+                    
+                    
                 }
             } else {
                 // Show alert for non-Cornell email

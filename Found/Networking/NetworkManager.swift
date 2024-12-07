@@ -92,7 +92,7 @@ class NetworkManager {
                     print("Successfully uploaded post: \(response.data)")
                     completion(true)
                 case .failure(let error):
-                    print("Error in NetworkManager.uploadPost: \(error.localizedDescription)")
+                    print("Error in NetworkManager.uploadFoundPost: \(error.localizedDescription)")
                     
                     completion(false)
                 }
@@ -129,7 +129,7 @@ class NetworkManager {
                 case .success(let response):
                     completion(true, response.data)
                 case .failure(let error):
-                    print("Error in NetworkManager.fetchLostPosts(): \(error)")
+                    print("Error in NetworkManager.createNewUser(): \(error)")
                     completion(false, nil)
                 }
             }
@@ -164,7 +164,7 @@ class NetworkManager {
                 case .success(let response):
                     completion(true, response.data)
                 case .failure(let error):
-                    print("Error in NetworkManager.fetchLostPosts(): \(error)")
+                    print("Error in NetworkManager.updateUserProfile(): \(error)")
                     completion(false, nil)
                 }
             }
@@ -195,11 +195,39 @@ class NetworkManager {
                 case .success(let response):
                     completion(true, response.data)
                 case .failure(let error):
-                    print("Error in NetworkManager.fetchLostPosts(): \(error)")
+                    print("Error in NetworkManager.getUserWithID(): \(error)")
                     completion(false, nil)
                 }
             }
         
     }
-
+    
+    func getUserWithEmail(email: String, completion: @escaping (Bool, AppUser?) -> Void) {
+        let jsonDecoder = JSONDecoder()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSZZZZZ"
+        jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        //parameters
+        //MARK: change the endpoint
+        AF.request(endpoint+"/api/user-login/\(email)/", method: .get, encoding: JSONEncoding.default) //change these
+            .validate(statusCode: 200..<300)
+            .responseDecodable(of: AppUserReturn.self, decoder: jsonDecoder) {
+                response in
+                print(response)
+                if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
+                    print("Raw Response JSON: \(jsonString)")
+                } else {
+                    print("No response body or data was empty.")
+                }
+                
+                switch response.result {
+                case .success(let response):
+                    completion(true, response.data)
+                case .failure(let error):
+                    print("Error in NetworkManager.getUserWithEmail(): \(error)")
+                    completion(false, nil)
+                }
+            }
+    }
 }
