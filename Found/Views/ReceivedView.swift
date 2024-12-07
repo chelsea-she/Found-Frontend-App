@@ -10,7 +10,7 @@ import SwiftUI
 struct ReceivedView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
     @EnvironmentObject var appState: AppState
-    @Binding var user: AppUser?
+    @Binding var user: AppUser
 
     var body: some View {//MARK: instead of received view, make this accessible from the profile view?
         NavigationView {

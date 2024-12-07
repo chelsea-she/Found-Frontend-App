@@ -18,7 +18,7 @@ struct FoundApp: App {
     @StateObject var appState: AppState = AppState()
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var authViewModel = AuthViewModel(appState: AppState())
-    @State var user: AppUser?
+    @State var user: AppUser = AppUser.example
 
     
 //    init() {

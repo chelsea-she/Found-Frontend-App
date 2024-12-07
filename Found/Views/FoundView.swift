@@ -16,7 +16,7 @@ import SwiftUI
 struct FoundView: View {
     @EnvironmentObject var viewModel: ProfileViewModel
     @EnvironmentObject var appState: AppState
-    @Binding var user: AppUser?
+    @Binding var user: AppUser
 
     @State private var category: String = ""
     @State private var itemName: String = ""
@@ -25,8 +25,8 @@ struct FoundView: View {
     @State private var date: Date = Date()
     @State private var location: String = ""
     @State private var drop: String = ""
-    @State private var email: String = "" //pre-fill with user's email
-    @State private var phoneNumber: String = "" //pre-fill with user's phone number
+    @State var email: String = ""//pre-fill with user's email
+    @State var phoneNumber: String = "" //pre-fill with user's phone number
     
     @State private var selectedImages: [UIImage] = []
     
@@ -40,12 +40,6 @@ struct FoundView: View {
 
     @State private var formPost: Post = Post.dummyData //MARK: change this later
     @State private var isLoading: Bool = false
-    
-    init(user: Binding<AppUser?>) {
-        _user = user
-       
-        
-    }
     
     //MARK: main body
     var body: some View {
@@ -156,37 +150,36 @@ struct FoundView: View {
                         Button(action:{//TODO: push do networking here and push to a confirmation page
                             if(checkFormFinished()){
                                 isLoading = true
-                                if(updatePost()){
-                                    
-                                    uploadImagesToFirebase(images: selectedImages) { result in
-                                        switch result {
-                                        case .success(let urls):
-                                            print("All images uploaded successfully!")
-                                            print("Uploaded URLs: \(urls)")
-                                            // You can save these URLs to Firestore or use them as needed
-                                            
-                                            var urlString = ""
-                                            var firstTime = true
-                                            for url in urls {
-                                                if firstTime {
-                                                    urlString += url
-                                                    firstTime = false
-                                                } else {
-                                                    urlString += "', '\(url)"
-                                                }
+                                updatePost()
+                                
+                                uploadImagesToFirebase(images: selectedImages) { result in
+                                    switch result {
+                                    case .success(let urls):
+                                        print("All images uploaded successfully!")
+                                        print("Uploaded URLs: \(urls)")
+                                        // You can save these URLs to Firestore or use them as needed
+                                        
+                                        var urlString = ""
+                                        var firstTime = true
+                                        for url in urls {
+                                            if firstTime {
+                                                urlString += url
+                                                firstTime = false
+                                            } else {
+                                                urlString += "', '\(url)"
                                             }
-                                            
-                                            formPost.image = urlString
-                                            
-                                            shouldNavigate = true
-                                            isLoading = false
-                                            
-                                        case .failure(let error):
-                                            print("Failed to upload images: \(error.localizedDescription)")
-                                            shouldNavigate = false
-                                            isLoading = false
-                                            
                                         }
+                                        
+                                        formPost.image = urlString
+                                        
+                                        shouldNavigate = true
+                                        isLoading = false
+                                        
+                                    case .failure(let error):
+                                        print("Failed to upload images: \(error.localizedDescription)")
+                                        shouldNavigate = false
+                                        isLoading = false
+                                        
                                     }
                                 }
                                 
@@ -273,7 +266,7 @@ struct FoundView: View {
         }
     }
     
-    func checkFormFinished() -> Bool {
+    func checkFormFinished() -> Bool{
         if(itemName.isEmpty ||
            category.isEmpty || category == "Other" ||
            selectedColors.isEmpty ||
@@ -288,7 +281,7 @@ struct FoundView: View {
         return true
     }
     
-    func updatePost() -> Bool {
+    func updatePost() {
         var colorString = "['"
         var firstTime = true
         for color in selectedColors {
@@ -301,12 +294,9 @@ struct FoundView: View {
         }
         colorString += "']"
         
-        if let user = user{
-            formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Date(), locationFound: location, dropLocation: drop, color: colorString, category: category, image: Post.dummyString, fulfilled: false, userId: user.id)//MARK: change this
-            return true
-        } else{
-            return false
-        }
+        
+        formPost = Post(id: Post.dummyID, itemName: itemName, description: description, timestamp: Date(), locationFound: location, dropLocation: drop, color: colorString, category: category, image: Post.dummyString, fulfilled: false, userId: user.id)//MARK: change this
+    
     }
     
     func uploadImagesToFirebase(images: [UIImage], completion: @escaping (Result<[String], Error>) -> Void) {

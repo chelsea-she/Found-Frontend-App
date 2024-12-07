@@ -4,7 +4,6 @@
 //
 //  Created by Chelsea She on 8/14/24.
 //
-
 import SwiftUI
 
 struct ProfileView: View {
@@ -13,14 +12,17 @@ struct ProfileView: View {
     @State private var displayText: String = "Guest"
     @State private var isEditing: Bool = false
     @State private var newName: String = ""
-    @Binding var user:AppUser?
+    @State private var newBio: String = ""  // Bio state variable
+    @State private var newPhoneNumber: String = ""  // Add a new state variable for phone number
+    @Binding var user: AppUser
+
     var body: some View {
         VStack(spacing: 20) {
             GeometryReader { geometry in
                 VStack(spacing: 20) {
                     // Profile Header
                     VStack(spacing: 8) {
-                        Text("Welcome, \(displayText)")
+                        Text("Welcome, \(user.username)")
                             .font(.headline)
                             .fontWeight(.bold)
                             .foregroundColor(.primary)
@@ -39,11 +41,13 @@ struct ProfileView: View {
                             Text("Display Name:")
                                 .font(.headline)
                             Spacer()
-                            Text(displayText)
+                            Text(user.username)
                                 .font(.body)
                                 .foregroundColor(.primary)
                             Button(action: {
                                 newName = displayText
+                                newBio = user.bio
+                                newPhoneNumber = user.phone
                                 isEditing = true
                             }) {
                                 Image(systemName: "square.and.pencil")
@@ -51,6 +55,7 @@ struct ProfileView: View {
                                     .foregroundColor(.blue)
                             }
                         }
+                        
                         Divider() // Add a subtle separator
                         
                         // Email Row
@@ -61,6 +66,30 @@ struct ProfileView: View {
                             Text(viewModel.email ?? "Not signed in")
                                 .font(.body)
                                 .foregroundColor(viewModel.email != nil ? .primary : .secondary)
+                        }
+
+                        Divider() // Add separator before Bio
+                        
+                        // Bio Row
+                        HStack {
+                            Text("Bio:")
+                                .font(.headline)
+                            Spacer()
+                            Text(user.bio)
+                                .font(.body)
+                                .foregroundColor(.primary)
+                        }
+                        
+                        Divider() // Add separator before Phone Number
+                        
+                        // Phone Number Row
+                        HStack {
+                            Text("Phone Number:")
+                                .font(.headline)
+                            Spacer()
+                            Text(user.phone)
+                                .font(.body)
+                                .foregroundColor(.primary)
                         }
                     }
                 }
@@ -96,13 +125,24 @@ struct ProfileView: View {
             viewModel.fetchUserName()
         }
         .sheet(isPresented: $isEditing) {
-            // Edit Name Popup
+            // Edit Name, Bio, and Phone Number Popup
             VStack {
-                Text("Edit Display Name")
+                Text("Edit Profile")
                     .font(.headline)
                     .padding()
                 
+                // Display Name Text Field
                 TextField("Enter new name", text: $newName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                // Bio Text Field
+                TextField("Enter bio", text: $newBio)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                // Phone Number Text Field
+                TextField("Enter phone number", text: $newPhoneNumber)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
@@ -116,8 +156,14 @@ struct ProfileView: View {
                     Spacer()
                     
                     Button("Save") {
-                        displayText = newName // Save changes
+                        user.username = newName // Save new name
+                        user.bio = newBio // Save new bio
+                        user.phone = newPhoneNumber // Save new phone number
                         isEditing = false // Dismiss the popup
+                        NetworkManager.shared.updateUserProfile(user: user, username: newName, bio: newBio, phone: newPhoneNumber){
+                            success, result in
+                            
+                        }
                     }
                     .font(.body)
                     .foregroundColor(.blue)

@@ -17,7 +17,7 @@ import GoogleSignInSwift
 struct AuthView: View {
     @ObservedObject var viewModel: AuthViewModel
     @EnvironmentObject var appState: AppState
-    @Binding var user:AppUser?
+    @Binding var user:AppUser
     @State private var showAlert = false
     @State private var alertMessage = ""
     

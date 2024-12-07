@@ -17,7 +17,7 @@ struct SignupView: View {
     @State private var bio = ""
     @State private var phone = ""
     @State private var isPickerPresented = false
-    @Binding var user: AppUser?
+    @Binding var user: AppUser
     
     @EnvironmentObject var appState: AppState
     @ObservedObject var viewModel: AuthViewModel
@@ -89,7 +89,9 @@ struct SignupView: View {
                 appState.isFirstTimeUser = false
                 appState.loggedIn = true
                 viewModel.authenticate(appState: appState)
-                user = newUser
+                if let newUser{
+                    user = newUser
+                }
             }
         }
     }

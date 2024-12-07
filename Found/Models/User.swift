@@ -24,3 +24,7 @@ struct AppUser:Codable{
     var timestamp: Date
     var addedItems: [Post]
 }
+
+extension AppUser{
+    static var example: AppUser = AppUser(id: 1, profileImage: "", username: "", bio: "", email: "", phone: "", licenseApprove: false, requests: [], items: [], timestamp: Date(), addedItems: [])
+}
