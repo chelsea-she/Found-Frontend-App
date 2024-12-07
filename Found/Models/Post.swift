@@ -30,7 +30,21 @@ struct Post : Codable {
 }
 
 extension Post{
-    public static var dummyData = Post(id: dummyID, itemName: dummyString, description: dummyString, timestamp: Date(), locationFound: dummyString, dropLocation: dummyString, color: dummyString, category: dummyString, image: dummyString, fulfilled: false, userId: dummyID)
+    public static var dummyData = [Post(
+        id: 1,
+        itemName: "1",
+        description: "1",
+        timestamp: Date(),
+        locationFound: "1",
+        dropLocation: "1",
+        color: "1",
+        category: "1",
+        image: "url",
+        fulfilled: false,
+        userId: 1
+    )
+    ]
     public static var dummyID = -600673
     public static var dummyString = "today"
+    
 }

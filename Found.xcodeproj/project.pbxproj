@@ -37,6 +37,7 @@
 		49C45B6D2D02A58800B7620A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 49C45B6C2D02A58800B7620A /* GoogleService-Info.plist */; };
 		542946762CFEE5DB00E71477 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 542946752CFEE5DB00E71477 /* Alamofire */; };
 		54B734D62D0256EF00B13C9C /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 54B734D52D0256EF00B13C9C /* PhoneNumberKit */; };
+		54ED11242D04094300E573DA /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 54ED11232D04094300E573DA /* SDWebImage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +83,7 @@
 				4989611F2CF2CEF8001F93EE /* FirebaseStorage in Frameworks */,
 				498961112CF2CEF8001F93EE /* FirebaseAuth in Frameworks */,
 				54B734D62D0256EF00B13C9C /* PhoneNumberKit in Frameworks */,
+				54ED11242D04094300E573DA /* SDWebImage in Frameworks */,
 				4989611B2CF2CEF8001F93EE /* FirebaseInAppMessaging-Beta in Frameworks */,
 				498961222CF2CF06001F93EE /* GoogleSignIn in Frameworks */,
 			);
@@ -206,6 +208,7 @@
 				498961232CF2CF06001F93EE /* GoogleSignInSwift */,
 				542946752CFEE5DB00E71477 /* Alamofire */,
 				54B734D52D0256EF00B13C9C /* PhoneNumberKit */,
+				54ED11232D04094300E573DA /* SDWebImage */,
 			);
 			productName = Found;
 			productReference = 498960FD2CF2CE95001F93EE /* Found.app */;
@@ -240,6 +243,7 @@
 				498961202CF2CF06001F93EE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				542946742CFEE5DB00E71477 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				54B734D42D0256EF00B13C9C /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
+				54ED11222D04094300E573DA /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			productRefGroup = 498960FE2CF2CE95001F93EE /* Products */;
 			projectDirPath = "";
@@ -433,7 +437,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.chelseashe.Found;
+				PRODUCT_BUNDLE_IDENTIFIER = chelseashe.com.Found;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -473,7 +477,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.chelseashe.Found;
+				PRODUCT_BUNDLE_IDENTIFIER = chelseashe.com.Found;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -539,6 +543,14 @@
 				minimumVersion = 4.0.1;
 			};
 		};
+		54ED11222D04094300E573DA /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.20.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -601,6 +613,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 54B734D42D0256EF00B13C9C /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
+		};
+		54ED11232D04094300E573DA /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 54ED11222D04094300E573DA /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

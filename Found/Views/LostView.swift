@@ -25,7 +25,7 @@ struct LostView: View {
     @State private var shouldNavigate = false
     @State private var showIncompleteAlert = false
 
-    @State private var formPost:Post = Post.dummyData
+    @State private var formPost:Post = Post.dummyData[0]
     @State var isLoading = false
     private var colorString: String = ""
     
@@ -378,7 +378,7 @@ struct UIKitViewControllerWrapperLost: UIViewControllerRepresentable {
     @State private var retPosts: [Post] = []
     
     func makeUIViewController(context: Context) -> ViewLostQueries {
-        let placeholderPage = ViewLostQueries(success: false, posts: [])
+        let placeholderPage = ViewLostQueries(success: false, posts: [], nibName:nil, bundle:nil)
         
         isLoading = true
         

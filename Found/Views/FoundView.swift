@@ -38,7 +38,7 @@ struct FoundView: View {
     @State private var showResetAlert = false
     @State private var showIncompleteAlert = false
 
-    @State private var formPost: Post = Post.dummyData //MARK: change this later
+    @State private var formPost: Post = Post.dummyData[0] //MARK: change this later
     @State private var isLoading: Bool = false
     
     init(user: Binding<AppUser>) {
@@ -254,7 +254,7 @@ struct FoundView: View {
                                         phoneNumberValid = false
                                         showResetAlert = false
                                         
-                                        formPost = Post.dummyData //MARK: change this later
+                                        formPost = Post.dummyData[0] //MARK: change this later
                                         
                                     },
                                     secondaryButton: .cancel()
