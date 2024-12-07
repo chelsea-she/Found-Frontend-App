@@ -170,5 +170,36 @@ class NetworkManager {
             }
         
     }
+    func getUserWithID(id: Int, completion: @escaping (Bool, AppUser?) -> Void){
+        
+        //MARK:
+        let jsonDecoder = JSONDecoder()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSZZZZZ"
+        jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        //parameters
+        //MARK: change the endpoint
+        AF.request(endpoint+"/api/users/\(id)/", method: .get, encoding: JSONEncoding.default) //change these
+            .validate(statusCode: 200..<300)
+            .responseDecodable(of: AppUserReturn.self, decoder: jsonDecoder) {
+                response in
+                print(response)
+                if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
+                    print("Raw Response JSON: \(jsonString)")
+                } else {
+                    print("No response body or data was empty.")
+                }
+                
+                switch response.result {
+                case .success(let response):
+                    completion(true, response.data)
+                case .failure(let error):
+                    print("Error in NetworkManager.fetchLostPosts(): \(error)")
+                    completion(false, nil)
+                }
+            }
+        
+    }
 
 }
